@@ -18,14 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.server.Client;
-import com.mygdx.game.server.Server;
-
-import characterPack.Archer;
-import characterPack.Knight;
-import characterPack.Musketeer;
-import characterPack.Priest;
-import characterPack.character;
 
 public class GameScreen implements Screen {
 
@@ -54,10 +46,8 @@ Viewport viewport;
 Camera cam;
 MoveToAction moveTo;
 BitmapFont font;
-Archer archerPlayer;
-Knight knightPlayer;
-Priest priestPlayer;
-Musketeer gunPlayer;
+character archerPlayer;
+character knightPlayer;
 ArrayList<character> playerList;
 character selectedPlayer;
 InputMultiplexer multi;
@@ -82,16 +72,12 @@ public GameScreen(MyGdxGame newGame)
 		blankCharacterArray = new ArrayList<character>();
 		moveTo = new MoveToAction();
 		font = new BitmapFont();
-		archerPlayer = new Archer(game);
-		knightPlayer = new Knight(game);
-		priestPlayer = new Priest(game);
-		gunPlayer = new Musketeer(game);
-		game.playerList = new ArrayList<character>();
-		game.playerList.add(archerPlayer);
-		game.playerList.add(knightPlayer);
-		game.playerList.add(priestPlayer);
-		game.playerList.add(gunPlayer);
-		game.turnList = new ArrayList<ArrayList<character>>();
+		archerPlayer = new character(0, 0, 2, 100, archer, game.batch, "Archer");
+		knightPlayer = new character(45, 25, 1, 200, knight, game.batch, "Knight");
+		playerList = new ArrayList<character>();
+		playerList.add(archerPlayer);
+		playerList.add(knightPlayer);
+		turnList = new ArrayList<ArrayList<character>>();
 		nextFound = false;
 		turnOver = false;
 		
@@ -116,14 +102,14 @@ public GameScreen(MyGdxGame newGame)
 			{
 				if(i%2 == 0)
 				{
-					highlight = new Actor1(game, outline, x + (i*45), y + (51 * j), i, j, game.batch, game.selectedPlayer );
+					highlight = new Actor1(outline, x + (i*45), y + (51 * j), i, j, game.batch, selectedPlayer );
 					tiles.add(blank);
 					tiles.get(i).add(highlight);
 					stage.addActor(highlight);
 				}
 				else
 				{
-					highlight = new Actor1(game, outline, x + (i*45), (y + 25) + (51*j), i, j, game.batch, game.selectedPlayer );
+					highlight = new Actor1(outline, x + (i*45), (y + 25) + (51*j), i, j, game.batch, selectedPlayer );
 					tiles.add(blank);
 					tiles.get(i).add(highlight);
 					stage.addActor(highlight);
@@ -131,62 +117,53 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 		}
-		for(int i = 0; i < game.playerList.size(); i++)
+		for(int i = 0; i < playerList.size(); i++)
 		{
-			stage.addActor(game.playerList.get(i));
+			stage.addActor(playerList.get(i));
 		}
 		
 		//adds seven levels (array list <character>s) of speed to the turnList.
 		for(int i = 0; i < 7; i++)
 		{
-			game.turnList.add(blankCharacterArray);
+			turnList.add(blankCharacterArray);
 			
 		}
-		for(int i = 0; i < game.playerList.size(); i++)
+		for(int i = 0; i < playerList.size(); i++)
 		{
 			
 			//Adds characters to relative turnList arrays based on speed.
-			if (game.playerList.get(i).getSpeed() == 1)
+			if (playerList.get(i).getSpeed() == 1)
 					{
-				game.turnList.get(0).add(game.playerList.get(i));
+				turnList.get(0).add(playerList.get(i));
 					}
-			if (game.playerList.get(i).getSpeed() == 2)
+			if (playerList.get(i).getSpeed() == 2)
 			{
-		game.turnList.get(1).add(game.playerList.get(i));
+		turnList.get(1).add(playerList.get(i));
 			}
-			if (game.playerList.get(i).getSpeed() == 3)
+			if (playerList.get(i).getSpeed() == 3)
 			{
-		game.turnList.get(2).add(game.playerList.get(i));
+		turnList.get(2).add(playerList.get(i));
 			}
-			if (game.playerList.get(i).getSpeed() == 4)
+			if (playerList.get(i).getSpeed() == 4)
 			{
-		game.turnList.get(3).add(game.playerList.get(i));
+		turnList.get(3).add(playerList.get(i));
 			}
-			if (game.playerList.get(i).getSpeed() == 5)
+			if (playerList.get(i).getSpeed() == 5)
 			{
-		game.turnList.get(4).add(game.playerList.get(i));
+		turnList.get(4).add(playerList.get(i));
 			}
-			if (game.playerList.get(i).getSpeed() == 6)
+			if (playerList.get(i).getSpeed() == 6)
 			{
-		game.turnList.get(5).add(game.playerList.get(i));
+		turnList.get(5).add(playerList.get(i));
 			}
 			
 		}
-		
-		//SERVER AND CLIENT CONSTRUCTION USE LATER
-		
 		new Thread(this.game).start();
-		game.socketServer = new Server(game, 0);
-		game.socketClient = new Client(this.game, "localhost", game.socketServer.getPort());
+		game.socketServer = new Server(game);
 		game.socketServer.start();
+		game.socketClient = new Client(this.game, "localHost");
 		game.socketClient.start();
-		
-		//Client client2 = new Client(this.game, "localhost", game.socketServer.getPort());
-		//client2.start();
-		
-		//new Thread(game.socketServer).start();
-		//game.socketServer.sendToAll("Server.");
-	    //new Thread(game.socketServer).start();
+		game.socketClient.sendData("ping".getBytes());
 	}
 
 	@Override
@@ -195,31 +172,21 @@ public GameScreen(MyGdxGame newGame)
 		stage.act();  
 		Gdx.input.setInputProcessor(stage);
 		game.cam.update();
-		//game.socketClient.receiveData();
-		
 		//Updating tile actors with current information. 
-		for(int i = 0; i < game.playerList.size(); i++)
+		for(int i = 0; i < playerList.size(); i++)
 		{
 			
-			//Unselects player that has just moved or has been unselected.
-			if(game.selectedPlayer != null)
-			{
-			if(game.selectedPlayer.getSelected() == false)
-			{
-				game.selectedPlayer = null;
-			}
-			}
 			//Checks for selected character.
-			if(game.playerList.get(i).getSelected() == true)
+			if(playerList.get(i).getSelected() == true)
 			{
 				//Designates selected character.
-				game.selectedPlayer = game.playerList.get(i);
+				selectedPlayer = playerList.get(i);
 				for(int x = 0; x < tiles.size(); x++)
 				{
 					for(int w = 0; w < tiles.get(x).size(); w++)
 					{
 						
-						tiles.get(x).get(w).setSelected(game.selectedPlayer);
+						tiles.get(x).get(w).setSelected(selectedPlayer);
 						tiles.get(x).get(w).setCamX(x1);
 						tiles.get(x).get(w).setCamY(y1);
 					}
@@ -231,7 +198,6 @@ public GameScreen(MyGdxGame newGame)
 		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
 		    //y = y + 4;
 			y1 = y1 - 4;
-			//game.socketClient.sendData("Player is moving down.");
 			for(int i = 0; i < tiles.size(); i++)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
@@ -241,9 +207,9 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 			
-			for(int i = 0; i < game.playerList.size(); i++)
+			for(int i = 0; i < playerList.size(); i++)
 			{
-				game.playerList.get(i).moveBy(0, 4f);
+				playerList.get(i).moveBy(0, 4f);
 			}
 			
 			
@@ -256,7 +222,6 @@ public GameScreen(MyGdxGame newGame)
 		if(Gdx.input.isKeyPressed(Keys.UP)) {
 			//y = y - 4;
 			y1 = y1 + 4;
-			//game.socketClient.sendData("Player is moving up.");
 			for(int i = 0; i < tiles.size(); i++)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
@@ -266,9 +231,9 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 			
-			for(int i = 0; i < game.playerList.size(); i++)
+			for(int i = 0; i < playerList.size(); i++)
 			{
-				game.playerList.get(i).moveBy(0, -4f);
+				playerList.get(i).moveBy(0, -4f);
 			}
 			camY = camY + 4;
 			game.cam.position.set(camX, camY, 0);
@@ -280,7 +245,6 @@ public GameScreen(MyGdxGame newGame)
 		{
 			//x = x + 4;
 			x1 = x1 - 4;
-			//game.socketClient.sendData("Player is moving left.");
 			for(int i = 0; i < tiles.size(); i++)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
@@ -290,9 +254,9 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 			
-			for(int i = 0; i < game.playerList.size(); i++)
+			for(int i = 0; i < playerList.size(); i++)
 			{
-				game.playerList.get(i).moveBy(4f, 0);
+				playerList.get(i).moveBy(4f, 0);
 			}
 			
 			camX = camX - 4;
@@ -303,8 +267,8 @@ public GameScreen(MyGdxGame newGame)
 		
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			//x = x - 4;
+			game.socketClient.sendData("ping".getBytes());
 			x1 = x1 + 4;
-			game.socketClient.sendData("Player is moving right.");
 			for(int i = 0; i < tiles.size(); i++)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
@@ -314,9 +278,9 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 			
-			for(int i = 0; i < game.playerList.size(); i++)
+			for(int i = 0; i < playerList.size(); i++)
 			{
-				game.playerList.get(i).moveBy(-4f, 0);
+				playerList.get(i).moveBy(-4f, 0);
 			}
 			
 			camX = camX + 4;
@@ -328,25 +292,25 @@ public GameScreen(MyGdxGame newGame)
 		
 		//Updates turnlist based on character's new speed.
 		
-		for(int i = 0; i < game.turnList.size(); i++)
+		for(int i = 0; i <turnList.size(); i++)
 		{
-			for(int j = 0; j < game.turnList.get(i).size(); j++)
+			for(int j = 0; j < turnList.get(i).size(); j++)
 			{
-				if(game.turnList.get(i).get(j).getSpeed() >= i)
+				if(turnList.get(i).get(j).getSpeed() >= i)
 				{
-					temp = game.turnList.get(i).get(j);
-					game.turnList.get(i).remove(j);
-					game.turnList.get(temp.getSpeed() -1).add(temp);
+					temp = turnList.get(i).get(j);
+					turnList.get(i).remove(j);
+					turnList.get(temp.getSpeed() -1).add(temp);
 				}
 			}
 		}
 		//If all players have gone this turn, turnOver = true..
-		for(int i = 0; i < game.turnList.size(); i++ )
+		for(int i = 0; i < turnList.size(); i++ )
 		{
 			turnOver = true;
-			for(int j = 0; j < game.turnList.get(i).size(); j++)
+			for(int j = 0; j < turnList.get(i).size(); j++)
 			{
-				if(game.turnList.get(i).get(j).getGoneThisTurn() == false)
+				if(turnList.get(i).get(j).getGoneThisTurn() == false)
 				{
 					turnOver = false;
 					break;
@@ -360,28 +324,27 @@ public GameScreen(MyGdxGame newGame)
 		//if turnOver = true, then all characters set to HasGoneThisTurn = false.
 		if(turnOver == true)
 		{
-			for(int i = 0; i < game.playerList.size(); i++)
+			for(int i = 0; i < playerList.size(); i++)
 			{
-				game.playerList.get(i).setTurn(false);
+				playerList.get(i).setTurn(false);
 			}
 		}
 		
 		//Finds the next character to act in the turnList
-		for(int i = game.turnList.size() - 1; i >= 0; i--)
+		for(int i = turnList.size() - 1; i >= 0; i--)
 		{
 			nextFound = false;
-			for(int j = 0; j < game.turnList.get(i).size(); j++)
+			for(int j = 0; j < turnList.get(i).size(); j++)
 			{
-				if(game.turnList.get(i).get(j).getGoneThisTurn() == false)
+				if(turnList.get(i).get(j).getGoneThisTurn() == false)
 				{
-					game.turnList.get(i).get(j).setNext(true);
-					//System.out.println("It is " + game.turnList.get(i).get(j).getName() + "'s turn.");
+					turnList.get(i).get(j).setNext(true);
 					nextFound = true;
 					break;
 				}
 				else
 				{
-					game.turnList.get(i).get(j).setNext(false);
+					turnList.get(i).get(j).setNext(false);
 				}
 			}
 			if(nextFound == true)
@@ -426,23 +389,26 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 		}
-		if(game.selectedPlayer != null)
-		{
-		if(game.selectedPlayer.getDisplayImage() != null)
-		{
-		game.batch.draw(game.selectedPlayer.getDisplayImage(), x1, y1 );
-		}
-		}
+		
 		//LOOP DRAWING PLAYERS
-		for(int i = 0; i < game.playerList.size(); i++)
+		for(int i = 0; i < playerList.size(); i++)
 		{
-			game.batch.draw(game.playerList.get(i).getSkin(),  game.playerList.get(i).getX(), game.playerList.get(i).getY());
-			if(game.playerList.get(i).getMouseOver() == true)
+			game.batch.draw(playerList.get(i).getSkin(),  playerList.get(i).getX(), playerList.get(i).getY());
+			if(playerList.get(i).getMouseOver() == true)
 			{
-				font.draw(game.batch, game.playerList.get(i).getType(), x1 + Gdx.input.getX() - 85, y1 + (Gdx.input.getY() + ((game.viewport.getWorldHeight()/2) - Gdx.input.getY())*2));
+				font.draw(game.batch, playerList.get(i).getType(), x1 + Gdx.input.getX() - 85, y1 + (Gdx.input.getY() + ((game.viewport.getWorldHeight()/2) - Gdx.input.getY())*2));
 			}
 		}
 		
+		if(game.isHosting = true)
+		{
+			System.out.println("Hosting game");
+		}
+		
+		if(game.isConnecting = true)
+		{
+			System.out.println("Connecting game");
+		}
 	
 		game.batch.end();
 		stage.draw();

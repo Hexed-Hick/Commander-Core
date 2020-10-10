@@ -20,10 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.server.Client;
-import com.mygdx.game.server.Server;
-
-import characterPack.character;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -33,7 +29,7 @@ import java.awt.Toolkit;
 import java.util.*;
 
 public class MyGdxGame extends Game implements Runnable {
-	public SpriteBatch batch;
+	SpriteBatch batch;
 	int screen;
 	Texture GT1;
 	Texture FMGT;
@@ -61,18 +57,16 @@ public class MyGdxGame extends Game implements Runnable {
 	BitmapFont font;
 	character archerPlayer;
 	character knightPlayer;
-	public ArrayList<character> playerList;
+	ArrayList<character> playerList;
 	character selectedPlayer;
 	InputMultiplexer multi;
 	ArrayList<ArrayList<character>> turnList;
 	Boolean nextFound;
 	Boolean turnOver;
-	Boolean hosting;
-	Boolean joining;
-	
-	 Client socketClient;
-	 Server socketServer;
-	 Boolean isHosting;
+	Client socketClient;
+	Server socketServer;
+	boolean isHosting;
+	boolean isConnecting;
 	
 	@Override
 	public void create () {
