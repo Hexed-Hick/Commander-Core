@@ -69,10 +69,13 @@ public class MyGdxGame extends Game implements Runnable {
 	Boolean turnOver;
 	Boolean hosting;
 	Boolean joining;
+	ArrayList<character> team1;
+	ArrayList<character> team2;
 	
 	 Client socketClient;
 	 Server socketServer;
 	 Boolean isHosting;
+	 boolean isConnecting;
 	
 	@Override
 	public void create () {

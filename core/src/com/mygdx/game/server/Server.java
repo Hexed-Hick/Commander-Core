@@ -153,4 +153,14 @@ public class Server extends Thread {
 		}
 	}
 	
+	public InetAddress getIP()
+	{
+		try {
+			return InetAddress.getLocalHost();
+		} catch (java.net.UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

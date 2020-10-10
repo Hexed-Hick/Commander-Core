@@ -175,13 +175,13 @@ public GameScreen(MyGdxGame newGame)
 		
 		//SERVER AND CLIENT CONSTRUCTION USE LATER
 		
-		new Thread(this.game).start();
-		game.socketServer = new Server(game, 0);
-		game.socketClient = new Client(this.game, "localhost", game.socketServer.getPort());
-		game.socketServer.start();
-		game.socketClient.start();
+	//	new Thread(this.game).start();
+	//	game.socketServer = new Server(game, 0);
+	//	game.socketClient = new Client(this.game, "localhost", game.socketServer.getPort(), 1);
+	//	game.socketServer.start();
+	//	game.socketClient.start();
 		
-		//Client client2 = new Client(this.game, "localhost", game.socketServer.getPort());
+		//Client client2 = new Client(this.game, "localhost", game.socketServer.getPort(), 2);
 		//client2.start();
 		
 		//new Thread(game.socketServer).start();

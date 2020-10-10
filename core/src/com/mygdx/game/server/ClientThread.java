@@ -7,10 +7,12 @@ public class ClientThread extends Thread {
 		private DataInputStream input;
 		private DataOutputStream out;
 		Boolean received = true;
+		int playerNumber;
 	
-	public ClientThread(Socket socket) {
+	public ClientThread(Socket socket, int playerNumber) {
 		System.out.println("Child client started.");
 		this.socket = socket;
+		this.playerNumber = playerNumber;
 		try {
 			this.input = new DataInputStream(socket.getInputStream());
 			this.out = new DataOutputStream(socket.getOutputStream());
@@ -30,10 +32,9 @@ public class ClientThread extends Thread {
 		{
 			
 				try {
-					System.out.println("Child attempted to read.");
+					System.out.println("Child reading...");
 								message = input.readUTF();
-								System.out.println(message);
-								System.out.println("Client input has " + input.available() + " bytes left to process.");
+								System.out.println("Client " + playerNumber + " > " +  message);
 								received = true;
 				}catch (IOException e)
 				{

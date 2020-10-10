@@ -27,7 +27,7 @@ public class Client extends Thread {
 	private ClientThread child;
 	Boolean received = true;
 	
-	public Client(MyGdxGame game, String ipAddress, int port)
+	public Client(MyGdxGame game, String ipAddress, int port, int playerNumber)
 	{
 
 		
@@ -37,7 +37,7 @@ public class Client extends Thread {
 		this.socket =new Socket(ipAddress, port);
 		//Establishes INPUT and OUTPUT reading from/to socket streams.
 		input = new DataInputStream(socket.getInputStream());
-		this.child = new ClientThread(this.socket);
+		this.child = new ClientThread(this.socket, playerNumber);
 		child.start();
 		}catch(IOException e)
 		{
