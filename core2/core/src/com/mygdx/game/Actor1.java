@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.AlphaAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveByAction;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 
+import characterPack.character;
+
 public class Actor1 extends Actor {
 
 	float alph;
@@ -34,8 +36,9 @@ public class Actor1 extends Actor {
 	MoveToAction move = new MoveToAction();
 	int camX;
 	int camY;
+	MyGdxGame game;
 	
-	public Actor1(Texture texture, int x, int y, int xchord, int ychord, SpriteBatch b, character currentChar)
+	public Actor1(final MyGdxGame game, Texture texture, int x, int y, int xchord, int ychord, SpriteBatch b, character currentChar)
 	{
 		sprit = new Sprite(texture);
 		setBounds(x, y, sprit.getWidth(), sprit.getHeight());
@@ -51,6 +54,7 @@ public class Actor1 extends Actor {
 		selected = currentChar;
 		camX = 0;
 		camY = 0;
+		this.game = game;
 		
 		//if(sprit.equals(new Sprite(new Texture("GRASS TILE1.png"))))
 		//{
@@ -85,6 +89,8 @@ public class Actor1 extends Actor {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println("Click");
+				if(selected != null)
+				{
 				if(selected.getSpeed() >= (Math.abs(selected.getXc() - xC)) && selected.getSpeed() >= Math.abs((selected.getYc() - yC)) )
 				{
 					if(selected.getNext() == true)
@@ -98,9 +104,11 @@ public class Actor1 extends Actor {
 					selected.addAction(move);
 					selected.setTurn(true);
 					selected.setNext(false);
+					selected.setSelected(false);
+					
 					}
 				}
-			
+				}
 				return super.touchDown(event, x, y, pointer, button);
 			}
 

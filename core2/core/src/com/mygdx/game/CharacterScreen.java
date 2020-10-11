@@ -1,9 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,21 +13,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class CharacterScreen extends ScreenAdapter {
+public class CharacterScreen extends ScreenAdapter{
 
 	SpriteBatch batch;
 	Sprite sprite;
-
-	MenuButton loadButton;
-	MenuButton deleteButton;
+	
+	MenuButton startButton;
+	MenuButton charButton;
 	MenuButton exitButton;
 
-	Texture loadButtonSkin;
-	Texture deleteButtonSkin;
+	Texture startButtonSkin;
+	Texture charButtonSkin;
 	Texture exitButtonSkin;
 
 	MyGdxGame game;
-	Stage characterStage;
+	Stage charStage;
 	
 	public CharacterScreen(MyGdxGame game)
 	{
@@ -41,18 +38,19 @@ public class CharacterScreen extends ScreenAdapter {
 	public void show() {
 		
 		batch = new SpriteBatch();
-		characterStage = new Stage(new ScreenViewport(), batch);
+		charStage = new Stage(new ScreenViewport(), batch);
+		charButtonSkin = new Texture("CHARACTERS.png");
 		exitButtonSkin = new Texture("EXIT.png");
-		loadButtonSkin = new Texture("EXIT.png");
-		deleteButtonSkin = new Texture("SOUND.png");
-	
-		loadButton = new MenuButton(loadButtonSkin,860,800,"sound");
-		deleteButton = new MenuButton(deleteButtonSkin,860,700,"resolution");
-		exitButton = new MenuButton(exitButtonSkin,860,800,"exit");
+		startButtonSkin = new Texture("START.png");
 
-		characterStage.addActor(loadButton);
-		characterStage.addActor(deleteButton);
-		characterStage.addActor(exitButton);
+
+		startButton = new MenuButton(startButtonSkin, 860, 700, "start");
+		charButton = new MenuButton(charButtonSkin,860,800,"characters");
+		exitButton = new MenuButton(exitButtonSkin,860,600,"exit");
+
+		charStage.addActor(startButton);
+		charStage.addActor(charButton);
+		charStage.addActor(exitButton);
 		
 	}
 
@@ -62,29 +60,30 @@ public class CharacterScreen extends ScreenAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);				//needed for background
 
 		game.batch.begin();
+		game.batch.draw(startButton.getSkin(), startButton.getXC(), startButton.getYC());
 		game.batch.draw(exitButton.getSkin(), exitButton.getXC(), exitButton.getYC());
-		game.batch.draw(loadButton.getSkin(), loadButton.getXC(), loadButton.getYC());
-		game.batch.draw(deleteButton.getSkin(), deleteButton.getXC(), deleteButton.getYC());
+		game.batch.draw(charButton.getSkin(), charButton.getXC(), charButton.getYC());
+
 		game.batch.end();
-		characterStage.act();
-		characterStage.draw();
+		charStage.act();
+		charStage.draw();
 		
-		Gdx.input.setInputProcessor(characterStage);
-		
+
+		Gdx.input.setInputProcessor(charStage);
+		if(startButton.startGame())
+		{
+			game.setScreen(new GameScreen(game));
+
+		}
 		if(exitButton.exitGame())
 		{
 			System.exit(0);
-		}
-		if(loadButton.load())
+		}		
+		if(charButton.characters())						
 		{
-			System.out.println("No character to load ya foo ya foo\n");
-		}
-		if(deleteButton.delete())
-		{
-			System.out.println("No character to delete ya foo ya foo\n");
+			game.setScreen(new CharacterSelectScreen(game));
 
 		}
-		
 	}
 
 	@Override

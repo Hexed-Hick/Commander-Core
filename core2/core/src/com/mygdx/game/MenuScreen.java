@@ -1,11 +1,15 @@
 package com.mygdx.game;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -14,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.server.Client;
+import com.mygdx.game.server.Server;
 
 public class MenuScreen extends ScreenAdapter {
 
@@ -36,13 +42,19 @@ public class MenuScreen extends ScreenAdapter {
 	Texture resolutionButtonSkin;
 	Texture exitButtonSkin;
 
-
+	TextField input;
+	String textField;
 	
 	MyGdxGame game;
 	Stage menuStage;
 	boolean startGame;
 	boolean isHosting;
 	boolean isConnecting;
+	TextField userInputIP;
+	TextField userInputPort;
+	String ip;
+	String port;
+	int portNum;
 	
 	public MenuScreen(MyGdxGame game)
 	{
@@ -51,6 +63,7 @@ public class MenuScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
+		
 		batch = new SpriteBatch();
 		menuStage = new Stage(new ScreenViewport(), batch);
 		startButtonSkin = new Texture("START.png");
@@ -79,6 +92,7 @@ public class MenuScreen extends ScreenAdapter {
 
 	@Override
 	public void render(float delta) {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
 		game.batch.draw(startButton.getSkin(), startButton.getXC(), startButton.getYC());
 		game.batch.draw(hostButton.getSkin(), hostButton.getXC(), hostButton.getYC());
@@ -93,43 +107,76 @@ public class MenuScreen extends ScreenAdapter {
 		
 		if(startButton.startGame())
 		{
-			game.setScreen(new GameScreen(game));
+			game.setScreen(new CharacterScreen(game));
 		}
 		if(exitButton.exitGame())
 		{
 			System.exit(0);
 		}
-		if(hostButton.startGame())
+		if(hostButton.isHosting)
 		{
-			game.isHosting = true;
-			game.setScreen(new GameScreen(game));
+		//	game.setScreen(new GameScreen(game));
+			if(game.socketClient == null && game.socketServer == null)
+			{
+			game.socketServer = new Server(game, 41795);
+			game.socketClient = new Client(this.game, "localhost", game.socketServer.getPort(), 1);
+			game.socketServer.start();
+			game.socketClient.start();
+			}
 			
 			TextFieldStyle style = new TextFieldStyle();
 		    style.fontColor = Color.RED;
 		    style.font = new BitmapFont();
-		    
-		    TextField textfield = new TextField("Hosting in progress", style);
-		    textfield.setPosition(300, 300);
-		    menuStage.addActor(textfield);
+		    if(input == null)
+		    {
+			try {
+				textField = "IP Address: " + InetAddress.getLocalHost() + " Port: " + game.socketServer.getPort();
+				input = new TextField(textField, style);
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    }
+			if(input != null)
+			{
+		    input.setPosition(300, 300);
+		    menuStage.addActor(input);
 
-		    textfield.getMessageText();
+		    input.getText();
+			}
 
 		}
-		if(connectButton.startGame())
+		if(connectButton.isConnecting)
 		{
-			game.isConnecting = true;
-			game.setScreen(new GameScreen(game));
+			//game.isConnecting = true;
+			//game.setScreen(new GameScreen(game));
 			
 			TextFieldStyle style = new TextFieldStyle();
 		    style.fontColor = Color.RED;
 		    style.font = new BitmapFont();
 
-			
-		    TextField textfield = new TextField("Joinable IP:", style);
-		    textfield.setPosition(300, 300);
-		    menuStage.addActor(textfield);
+			if(userInputIP == null && userInputPort == null)
+			{
+		    userInputIP = new TextField("IP Address:", style);
+		    userInputPort = new TextField("Port:", style);
+		    userInputIP.setPosition(300, 300);
+		    userInputPort.setPosition(300, 280);
+		    menuStage.addActor(userInputIP);
+		    menuStage.addActor(userInputPort);
+			}
 		    
-		    textfield.getMessageText();
+		   // ip = userInputIP.getText();
+		   // portNum = Integer.parseInt(userInputPort.getText());
+		    
+		    if(connectButton.connect)
+		    {
+		    	  ip = userInputIP.getText();
+				    portNum = Integer.parseInt(userInputPort.getText());
+			game.socketClient = new Client(this.game, ip, portNum, 2);
+			game.socketClient.start();
+			game.setScreen(new GameScreen(game));
+		    }
+		    
 
 		}
 		if(settingsButton.settings())

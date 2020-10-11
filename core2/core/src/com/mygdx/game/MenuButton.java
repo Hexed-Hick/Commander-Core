@@ -23,7 +23,13 @@ public class MenuButton extends Actor {
 	Boolean characters;
 	Boolean load;
 	Boolean delete;
-	
+	Boolean connect;
+	Boolean A1choice;
+	Boolean K1choice;
+	Boolean P1choice;
+	Boolean M1choice;
+	Boolean Accept;
+	Boolean Chosen;
 	
 
 	public MenuButton(Texture texture, int x, int y, String type)
@@ -42,6 +48,15 @@ public class MenuButton extends Actor {
 		characters = false;
 		load = false;
 		delete = false;
+		connect = false;
+		A1choice = false;
+		K1choice = false;
+		P1choice = false;
+		M1choice = false;
+		Accept = false;
+		Chosen = false;
+		
+
 
 		setBounds(x, y, skin.getWidth(), skin.getHeight());
 		setTouchable(Touchable.enabled);
@@ -62,7 +77,12 @@ public class MenuButton extends Actor {
 						}
 						if(buttonType == "connect")
 						{
+							if(isConnecting)
+							{
+								connect = true;
+							}
 							isConnecting = true;
+							
 						}
 						if(buttonType == "settings")
 						{
@@ -92,8 +112,26 @@ public class MenuButton extends Actor {
 						{
 							delete = true;
 						}
-
-						
+						if(buttonType == "archer")
+						{
+							A1choice = true;
+						}
+						if(buttonType == "knight")
+						{
+							K1choice = true;
+						}
+						if(buttonType == "priest")
+						{
+							P1choice = true;
+						}
+						if(buttonType == "musketeer")
+						{
+							M1choice = true;
+						}
+						if(buttonType == "Accept")
+						{
+							Accept = true;
+						}
 						return super.touchDown(event, x, y, pointer, button);
 						
 					}
@@ -152,6 +190,34 @@ public class MenuButton extends Actor {
 	public boolean delete()
 	{
 		return delete;
+	}
+	public boolean A1choice()
+	{
+		return A1choice;
+	}
+	public boolean K1choice()
+	{
+		return K1choice;
+	}
+	public boolean P1choice()
+	{
+		return P1choice;
+	}
+	public boolean M1choice()
+	{
+		return M1choice;
+	}
+	public boolean Accept()
+	{
+		return Accept;
+	}
+	public void setX(int x)
+	{
+		xChord = x;
+	}
+	public void setY(int y)
+	{
+		yChord = y;
 	}
 
 }
