@@ -128,7 +128,7 @@ public class MenuButton extends Actor {
 						{
 							M1choice = true;
 						}
-						if(buttonType == "Accept")
+						if(buttonType == "accept")
 						{
 							Accept = true;
 						}

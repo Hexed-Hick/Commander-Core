@@ -21,32 +21,26 @@ import characterPack.Archer;
 import characterPack.Knight;
 import characterPack.Musketeer;
 import characterPack.Priest;
+import characterPack.character;
 
 public class CharacterSelectScreen extends ScreenAdapter{
 
 	SpriteBatch batch;
 	Sprite sprite;
 	
-	MenuButton startButton;
 	MenuButton A1;
 	MenuButton K1;
 	MenuButton P1;
 	MenuButton M1;
-	MenuButton loadButton;
-	MenuButton deleteButton;
-	MenuButton exitButton;
 	MenuButton acceptButton;
 	ArrayList<MenuButton> Displays;
-	
-	Texture startButtonSkin;
-	Texture charButtonSkin;
+	ArrayList<character> team1;
+	ArrayList<character> team2;
+
 	Texture archButtonSkin;
 	Texture knightButtonSkin;
 	Texture priestButtonSkin;
 	Texture muskButtonSkin;
-	Texture loadButtonSkin;
-	Texture deleteButtonSkin;
-	Texture exitButtonSkin;
 	Texture acceptButtonSkin;
 	
 	Priest p;
@@ -55,9 +49,6 @@ public class CharacterSelectScreen extends ScreenAdapter{
 	Archer a;
 
 	Boolean Chosen;
-	//Boolean Kchosen;
-	//Boolean Pchosen;
-	//Boolean Mchosen;
 	
 	MyGdxGame game;
 	Stage charSelectStage;
@@ -72,32 +63,27 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		
 		batch = new SpriteBatch();
 		charSelectStage = new Stage(new ScreenViewport(), batch);
-		charButtonSkin = new Texture("CHARACTERS.png");
 		archButtonSkin = new Texture("ARCHER_PORTRAIT.PNG");
 		knightButtonSkin = new Texture("TEMPLAR_PORTRAIT.PNG");
 		priestButtonSkin = new Texture("PRIEST_PORTRAIT.PNG");
 		muskButtonSkin = new Texture("MUSKETEER_PORTRAIT.PNG");
-		exitButtonSkin = new Texture("EXIT.png");
-		startButtonSkin = new Texture("START.png");
 		acceptButtonSkin = new Texture("ACCEPT.png");
 
 		Displays = new ArrayList<>();
 
-		startButton = new MenuButton(startButtonSkin, 1650, 100, "start");
-		exitButton = new MenuButton(exitButtonSkin,100,100,"exit");
 		acceptButton = new MenuButton(acceptButtonSkin,800,500,"accept");
 		A1 = new MenuButton(archButtonSkin,750,800,"archer");
 		K1 = new MenuButton(knightButtonSkin,900,800,"knight");
 		P1 = new MenuButton(priestButtonSkin,1050,800,"priest");
 		M1 = new MenuButton(muskButtonSkin,1200,800,"musketeer");
 		
-		Displays.add(startButton);
-		Displays.add(exitButton);
-		Displays.add(acceptButton);
 		Displays.add(A1);
 		Displays.add(K1);
 		Displays.add(P1);
 		Displays.add(M1);
+
+		team1 = new ArrayList<character>();
+		team2 = new ArrayList<character>();
 
 		a = new Archer(game);
 		p = new Priest(game);
@@ -106,14 +92,11 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		
 		Chosen = false;
 
-		charSelectStage.addActor(startButton);
 		charSelectStage.addActor(acceptButton);
 		charSelectStage.addActor(A1);
 		charSelectStage.addActor(K1);
 		charSelectStage.addActor(P1);
-		charSelectStage.addActor(M1);
-		charSelectStage.addActor(exitButton);
-		
+		charSelectStage.addActor(M1);		
 	}
 
 	@Override
@@ -122,8 +105,6 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);				//needed for background
 
 		game.batch.begin();
-		game.batch.draw(startButton.getSkin(), startButton.getXC(), startButton.getYC());
-		game.batch.draw(exitButton.getSkin(), exitButton.getXC(), exitButton.getYC());
 		game.batch.draw(A1.getSkin(), A1.getXC(), A1.getYC());
 		game.batch.draw(K1.getSkin(), K1.getXC(), K1.getYC());
 		game.batch.draw(P1.getSkin(), P1.getXC(), P1.getYC());
@@ -134,58 +115,70 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		charSelectStage.draw();
 		
 		Gdx.input.setInputProcessor(charSelectStage);
-		if(startButton.startGame())
-		{
-			game.setScreen(new GameScreen(game));
-
-		}
-		if(exitButton.exitGame())
-		{
-			System.exit(0);
-		}
 		if(Chosen == true)
 		{
-			Displays.get(3).setX(750);
-			Displays.get(3).setY(700);
-			
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 			game.batch.begin();
-			game.batch.draw(A1.getSkin(), A1.getXC(), A1.getYC());
+			for(MenuButton i : Displays)
+			{
+				game.batch.draw(i.getSkin(), i.getXC(), i.getYC());
+			}
 			game.batch.end();
 			charSelectStage.act();
 			charSelectStage.draw();
+			
+			if(team1.size() >= 2 && team2.size() >= 2)
+			{
+				game.setScreen(new GameScreen(game));
+
+			}
 
 		}
 		if(A1.A1choice())
 		{
-			Displays.get(3).setX(750);
-			Displays.get(3).setY(700);
+			Displays.get(0).setX(750);
+			Displays.get(0).setY(700);
 			
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 			game.batch.begin();
-			game.batch.draw(Displays.get(3).getSkin(), Displays.get(3).getXC(), Displays.get(3).getYC());
+			game.batch.draw(Displays.get(0).getSkin(), Displays.get(0).getXC(), Displays.get(0).getYC());
 			game.batch.draw(acceptButton.getSkin(), acceptButton.getXC(), acceptButton.getYC());
 			game.batch.end();
-			
 			charSelectStage.act();
 			charSelectStage.draw();
 
 			if(acceptButton.Accept())
 			{
-				game.team1.add(a);
-				acceptButton.Accept = false;
-				A1.A1choice = false;
-				Chosen = true;
+				if(team1.size() < 2)
+				{
+					team1.add(a);
+					System.out.println(team1.toString());
+					acceptButton.Accept = false;
+					A1.A1choice = false;
+					Chosen = true;
+				}
+				else
+				{
+					if(team2.size() < 2)
+					{
+						team2.add(a);
+						System.out.println(team2.toString());
+						acceptButton.Accept = false;
+						A1.A1choice = false;
+						Chosen = true;
+					}
+				}
 			}
 		}
 		if(K1.K1choice())
 		{
-			MenuButton Display = new MenuButton(knightButtonSkin,800,600,"knight");
-			game.batch.begin();
+			Displays.get(1).setX(900);
+			Displays.get(1).setY(750);
 
-			game.batch.draw(Display.getSkin(), Display.getXC(), Display.getYC());
+			game.batch.begin();
+			game.batch.draw(Displays.get(1).getSkin(), Displays.get(1).getXC(), Displays.get(1).getYC());
 			game.batch.draw(acceptButton.getSkin(), acceptButton.getXC(), acceptButton.getYC());
 			game.batch.end();
 			charSelectStage.act();
@@ -193,17 +186,34 @@ public class CharacterSelectScreen extends ScreenAdapter{
 
 			if(acceptButton.Accept)
 			{
-				game.team1.add(k);
+				if(team1.size() < 2)
+				{
+				team1.add(k);
+				System.out.println(team1.toString());
 				acceptButton.Accept = false;
 				K1.K1choice = false;
+				Chosen = true;
+				}
+				else
+				{
+					if(team2.size() < 2)
+					{
+						team2.add(k);
+						System.out.println(team2.toString());
+						acceptButton.Accept = false;
+						K1.K1choice = false;
+						Chosen = true;
+					}
+				}
 			}
 		}
 		if(P1.P1choice())
 		{
-			MenuButton Display = new MenuButton(priestButtonSkin,800,600,"priest");
-			game.batch.begin();
+			Displays.get(2).setX(1050);
+			Displays.get(2).setY(750);
 
-			game.batch.draw(Display.getSkin(), Display.getXC(), Display.getYC());
+			game.batch.begin();
+			game.batch.draw(Displays.get(2).getSkin(), Displays.get(2).getXC(), Displays.get(2).getYC());
 			game.batch.draw(acceptButton.getSkin(), acceptButton.getXC(), acceptButton.getYC());
 			game.batch.end();
 			charSelectStage.act();
@@ -211,18 +221,33 @@ public class CharacterSelectScreen extends ScreenAdapter{
 
 			if(acceptButton.Accept)
 			{
-				game.team1.add(p);
-				acceptButton.Accept = false;
-				P1.P1choice = false;
-
+				if(team1.size() < 2)
+				{
+					team1.add(p);
+					System.out.println(team1.toString());
+					acceptButton.Accept = false;
+					P1.P1choice = false;
+					Chosen = true;
+				}
+				else
+				{
+					if(team2.size() < 2)
+					{
+						team2.add(p);
+						System.out.println(team2.toString());
+						acceptButton.Accept = false;
+						P1.P1choice = false;
+						Chosen = true;
+					}
+				}
 			}
 		}
 		if(M1.M1choice())
 		{
-			MenuButton Display = new MenuButton(muskButtonSkin,800,600,"musketeer");
+			Displays.get(3).setX(1200);
+			Displays.get(3).setY(750);
 			game.batch.begin();
-
-			game.batch.draw(Display.getSkin(), Display.getXC(), Display.getYC());
+			game.batch.draw(Displays.get(3).getSkin(), Displays.get(3).getXC(), Displays.get(3).getYC());
 			game.batch.draw(acceptButton.getSkin(), acceptButton.getXC(), acceptButton.getYC());
 			game.batch.end();
 			charSelectStage.act();
@@ -230,10 +255,25 @@ public class CharacterSelectScreen extends ScreenAdapter{
 
 			if(acceptButton.Accept)
 			{
-					game.team1.add(m);
+				if(team1.size() < 2)
+				{
+					team1.add(m);
+					System.out.println(team1.toString());
 					acceptButton.Accept = false;
 					M1.M1choice = false;
-
+					Chosen = true;
+				}
+				else
+				{
+					if(team2.size() < 2)
+					{
+						team2.add(m);
+						System.out.println(team2.toString());
+						acceptButton.Accept = false;
+						M1.M1choice = false;
+						Chosen = true;
+					}
+				}
 			}
 		}
 	}
