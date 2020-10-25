@@ -30,8 +30,10 @@ public class Knight extends character{
 	Boolean isNext;
 	Texture model = new Texture("KNIGHT.png");
 	Sprite large;
+	public int team;
+	MyGdxGame game;
 	
-	public Knight(MyGdxGame game) {
+	public Knight(final MyGdxGame game) {
 		super(game);
 		name = "Knight";
 		sprit = new Sprite(model);
@@ -51,6 +53,8 @@ public class Knight extends character{
 		sType = "Knight" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
+		this.game = game;
+		team = 1;
 		
 		addListener(new InputListener()
 		{
@@ -72,6 +76,9 @@ public class Knight extends character{
 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				if(game.player == team)
+				{
+					System.out.println("Selected.");
 				if(selected == false)
 				{
 				selected = true;
@@ -79,6 +86,7 @@ public class Knight extends character{
 				else
 				{
 					selected = false;
+				}
 				}
 				
 				return super.touchDown(event, x, y, pointer, button);
@@ -197,5 +205,13 @@ public class Knight extends character{
 		public void setSelected(Boolean select)
 		{
 			selected = select;
+		}
+		public int getTeam()
+		{
+			return team;
+		}
+		public void setTeam(int player)
+		{
+			team = player;
 		}
 	}

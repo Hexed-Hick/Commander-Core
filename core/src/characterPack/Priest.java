@@ -30,6 +30,7 @@ public class Priest extends character {
 	Boolean isNext;
 	Texture model = new Texture("PRIEST.png");
 	Sprite large;
+	public int team;
 
 	MyGdxGame game;
 	
@@ -54,10 +55,10 @@ public class Priest extends character {
 		sType = "Priest" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
+		team = 1;
 		
 		addListener(new InputListener()
 		{
-			private MyGdxGame game;
 
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -76,6 +77,8 @@ public class Priest extends character {
 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				if(game.player == team)
+				{
 				if(selected == false)
 				{
 				selected = true;
@@ -83,6 +86,7 @@ public class Priest extends character {
 				else
 				{
 					selected = false;
+				}
 				}
 				
 				return super.touchDown(event, x, y, pointer, button);
@@ -201,5 +205,13 @@ public class Priest extends character {
 		public void setSelected(Boolean select)
 		{
 			selected = select;
+		}
+		public int getTeam()
+		{
+			return team;
+		}
+		public void setTeam(int player)
+		{
+			team = player;
 		}
 	}

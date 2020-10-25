@@ -65,7 +65,7 @@ public class MenuScreen extends ScreenAdapter {
 	public void show() {
 		
 		batch = new SpriteBatch();
-		menuStage = new Stage(new ScreenViewport(), batch);
+		menuStage = new Stage(game.viewport, batch);
 		startButtonSkin = new Texture("START.png");
 		hostButtonSkin = new Texture("HOST.png");					//start server to be connected too
 		exitButtonSkin = new Texture("EXIT.png");
@@ -107,7 +107,7 @@ public class MenuScreen extends ScreenAdapter {
 		
 		if(startButton.startGame())
 		{
-			game.setScreen(new GameScreen(game));
+			game.setScreen(new CharacterScreen(game));
 		}
 		if(exitButton.exitGame())
 		{
@@ -115,10 +115,11 @@ public class MenuScreen extends ScreenAdapter {
 		}
 		if(hostButton.isHosting)
 		{
+			game.player = 1;
 		//	game.setScreen(new GameScreen(game));
 			if(game.socketClient == null && game.socketServer == null)
 			{
-			game.socketServer = new Server(game, 0);
+			game.socketServer = new Server(game, 41795);
 			game.socketClient = new Client(this.game, "localhost", game.socketServer.getPort(), 1);
 			game.socketServer.start();
 			game.socketClient.start();
@@ -154,6 +155,7 @@ public class MenuScreen extends ScreenAdapter {
 			TextFieldStyle style = new TextFieldStyle();
 		    style.fontColor = Color.RED;
 		    style.font = new BitmapFont();
+		    game.player = 2;
 
 			if(userInputIP == null && userInputPort == null)
 			{
@@ -174,7 +176,7 @@ public class MenuScreen extends ScreenAdapter {
 				    portNum = Integer.parseInt(userInputPort.getText());
 			game.socketClient = new Client(this.game, ip, portNum, 2);
 			game.socketClient.start();
-			game.setScreen(new GameScreen(game));
+			game.setScreen(new CharacterScreen(game));
 		    }
 		    
 

@@ -91,10 +91,11 @@ public class Actor1 extends Actor {
 				System.out.println("Click");
 				if(selected != null)
 				{
-				if(selected.getSpeed() >= (Math.abs(selected.getXc() - xC)) && selected.getSpeed() >= Math.abs((selected.getYc() - yC)) )
-				{
+				//if(selected.getSpeed() >= (Math.abs(selected.getXc() - xC)) && selected.getSpeed() >= Math.abs((selected.getYc() - yC)) )
+			//	{
 					if(selected.getNext() == true)
 					{
+						System.out.println("Moving.");
 					move.setPosition(fxC - camX, fyC - camY);
 					move.setDuration(1f);
 					selected.setfxC(fxC);
@@ -108,7 +109,11 @@ public class Actor1 extends Actor {
 					
 					}
 				}
-				}
+				//else
+				//{
+				//	System.out.println("Not close enough.");
+				//}
+				//}
 				return super.touchDown(event, x, y, pointer, button);
 			}
 

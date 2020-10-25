@@ -2,16 +2,26 @@ package com.mygdx.game.server;
 import java.io.*;
 import java.net.*;
 
+import com.mygdx.game.MyGdxGame;
+
+import characterPack.Archer;
+import characterPack.Knight;
+import characterPack.Musketeer;
+import characterPack.Priest;
+
 public class ClientThread extends Thread {
 		protected Socket socket;
 		private DataInputStream input;
 		private DataOutputStream out;
 		Boolean received = true;
 		int playerNumber;
+		MyGdxGame game;
+		String current;
 	
-	public ClientThread(Socket socket, int playerNumber) {
+	public ClientThread(MyGdxGame game, Socket socket, int playerNumber) {
 		System.out.println("Child client started.");
 		this.socket = socket;
+		this.game = game;
 		this.playerNumber = playerNumber;
 		try {
 			this.input = new DataInputStream(socket.getInputStream());
@@ -33,9 +43,12 @@ public class ClientThread extends Thread {
 			
 				try {
 					System.out.println("Child reading...");
-								message = input.readUTF();
+								current = input.readUTF();
+								System.out.println(current);
 								System.out.println("Client " + playerNumber + " > " +  message);
-								received = true;
+								game.newDirection = true;
+								game.currentDirection = current;
+								current = "";
 				}catch (IOException e)
 				{
 								e.printStackTrace();

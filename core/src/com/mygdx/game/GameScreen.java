@@ -64,6 +64,8 @@ InputMultiplexer multi;
 ArrayList<ArrayList<character>> turnList;
 Boolean nextFound;
 Boolean turnOver;
+int mapHeight;
+int mapWidth;
 
 public GameScreen(MyGdxGame newGame)
 {
@@ -82,30 +84,35 @@ public GameScreen(MyGdxGame newGame)
 		blankCharacterArray = new ArrayList<character>();
 		moveTo = new MoveToAction();
 		font = new BitmapFont();
-		archerPlayer = new Archer(game);
-		knightPlayer = new Knight(game);
-		priestPlayer = new Priest(game);
-		gunPlayer = new Musketeer(game);
+		//archerPlayer = new Archer(game);
+		//knightPlayer = new Knight(game);
+		//priestPlayer = new Priest(game);
+		//gunPlayer = new Musketeer(game);
 		game.playerList = new ArrayList<character>();
-		game.playerList.add(archerPlayer);
+		/*game.playerList.add(archerPlayer);
 		game.playerList.add(knightPlayer);
 		game.playerList.add(priestPlayer);
-		game.playerList.add(gunPlayer);
+		game.playerList.add(gunPlayer);*/
 		game.turnList = new ArrayList<ArrayList<character>>();
 		nextFound = false;
 		turnOver = false;
+		mapHeight = 20;
+		mapWidth = 20;
+		//Adds team1 players to playerList for turn management.
+		for(int i = 0; i < game.team1.size(); i++)
+		{
+			game.playerList.add(game.team1.get(i));
+		}
+		//adds team2 players to playerList for turn management.
+		for(int i = 0; i < game.team2.size(); i++)
+		{
+			game.playerList.add(game.team2.get(i));
+		}
 		
-		
-		
-		
-		//creates characters
 		
 		//game.cam = new OrthographicCamera();
 		//viewport = new StretchViewport(1920, 1080, cam);
 		//viewport.apply();
-		
-		
-		
 		camX = 960;
 		camY = 540;
 		//cam.position.set(camX, camY, 0);
@@ -127,7 +134,6 @@ public GameScreen(MyGdxGame newGame)
 					tiles.add(blank);
 					tiles.get(i).add(highlight);
 					stage.addActor(highlight);
-					
 				}
 			}
 		}
@@ -173,20 +179,50 @@ public GameScreen(MyGdxGame newGame)
 			
 		}
 		
-		//SERVER AND CLIENT CONSTRUCTION USE LATER
+	
 		
-	//	new Thread(this.game).start();
-	//	game.socketServer = new Server(game, 0);
-	//	game.socketClient = new Client(this.game, "localhost", game.socketServer.getPort(), 1);
-	//	game.socketServer.start();
-	//	game.socketClient.start();
+		//Setting spawn points
 		
-		//Client client2 = new Client(this.game, "localhost", game.socketServer.getPort(), 2);
-		//client2.start();
+		for(int i = 0; i < game.team1.size(); i++)
+		{
+			if(i%2 == 0)
+			{
+			game.team1.get(i).setBounds(i*45, 25, game.team1.get(i).getSkin().getWidth(), game.team1.get(i).getSkin().getHeight());
+			game.team1.get(i).setxC(i);
+			game.team1.get(i).setyC(0);
+			game.team1.get(i).setfxC(i * 45);
+			game.team1.get(i).setfyC(0);
+			}
+			else
+			{
+				game.team1.get(i).setBounds(i*45, 25, game.team1.get(i).getSkin().getWidth(), game.team1.get(i).getSkin().getHeight());
+				game.team1.get(i).setxC(i);
+				game.team1.get(i).setyC(0);
+				game.team1.get(i).setfxC(i * 45);
+				game.team1.get(i).setfyC(25);
+			}
+		}
+		for(int i = 0; i < game.team2.size(); i++)
+		{
+			System.out.println("Creating team 2 spawns.");
+			if(i%2 == 0)
+			{//x + (i*45), y + (51 * j)
+			game.team2.get(i).setBounds((19 - i) *45, (19*51) + 25, game.team2.get(i).getSkin().getWidth(), game.team2.get(i).getSkin().getHeight());
+			game.team2.get(i).setxC(20 - i);
+			game.team2.get(i).setyC(20);
+			game.team2.get(i).setfxC((19 - i) *45);
+			game.team2.get(i).setfyC((19 * 51) + 25);
+			}
+			else
+			{
+				game.team2.get(i).setBounds((19-i) * 45, (19*51), game.team2.get(i).getSkin().getWidth(), game.team2.get(i).getSkin().getHeight());
+				game.team2.get(i).setxC(19 - i);
+				game.team2.get(i).setyC(19);
+				game.team2.get(i).setfxC((19 - i) * 45);
+				game.team2.get(i).setfyC((19 * 51));
+			}
+		}
 		
-		//new Thread(game.socketServer).start();
-		//game.socketServer.sendToAll("Server.");
-	    //new Thread(game.socketServer).start();
 	}
 
 	@Override
@@ -261,7 +297,6 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
 				{
-					
 					tiles.get(i).get(j).moveBy(0, -.010f);
 				}
 			}
@@ -275,7 +310,6 @@ public GameScreen(MyGdxGame newGame)
 			game.cam.update();
 			//batch.setProjectionMatrix(cam.combined);
 		}
-		
 		if(Gdx.input.isKeyPressed(Keys.LEFT))
 		{
 			//x = x + 4;
@@ -285,11 +319,9 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
 				{
-					
 					tiles.get(i).get(j).moveBy(.01f, 0);
 				}
 			}
-			
 			for(int i = 0; i < game.playerList.size(); i++)
 			{
 				game.playerList.get(i).moveBy(4f, 0);
@@ -304,12 +336,11 @@ public GameScreen(MyGdxGame newGame)
 		if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
 			//x = x - 4;
 			x1 = x1 + 4;
-			game.socketClient.sendData("Player is moving right.");
+		//	game.socketClient.sendData("Player is moving right.");
 			for(int i = 0; i < tiles.size(); i++)
 			{
 				for(int j = 0; j < tiles.get(i).size(); j++)
 				{
-					
 					tiles.get(i).get(j).moveBy(-.01f, 0);
 				}
 			}
@@ -332,7 +363,7 @@ public GameScreen(MyGdxGame newGame)
 		{
 			for(int j = 0; j < game.turnList.get(i).size(); j++)
 			{
-				if(game.turnList.get(i).get(j).getSpeed() >= i)
+				if(game.turnList.get(i).get(j).getSpeed() != i)
 				{
 					temp = game.turnList.get(i).get(j);
 					game.turnList.get(i).remove(j);
@@ -442,43 +473,29 @@ public GameScreen(MyGdxGame newGame)
 				font.draw(game.batch, game.playerList.get(i).getType(), x1 + Gdx.input.getX() - 85, y1 + (Gdx.input.getY() + ((game.viewport.getWorldHeight()/2) - Gdx.input.getY())*2));
 			}
 		}
-		
-	
 		game.batch.end();
 		stage.draw();
-		
 	}
-
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
-
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
-
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void dispose() {
 		game.batch.dispose();
 		GT1.dispose();
 		FMGT.dispose();
-		
 	}
-
 }

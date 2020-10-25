@@ -65,33 +65,37 @@ public class MyGdxGame extends Game implements Runnable {
 	character selectedPlayer;
 	InputMultiplexer multi;
 	ArrayList<ArrayList<character>> turnList;
-	Boolean nextFound;
-	Boolean turnOver;
-	Boolean hosting;
-	Boolean joining;
-	ArrayList<character> team1;
-	ArrayList<character> team2;
+	boolean nextFound;
+	boolean turnOver;
+	boolean hosting;
+	boolean joining;
+	public ArrayList<character> team1;
+	public ArrayList<character> team2;
+	public String currentDirection;
+	public boolean newDirection;
+	
+	public int player;
 	
 	 Client socketClient;
 	 Server socketServer;
-	 Boolean isHosting;
+	 boolean isHosting;
 	 boolean isConnecting;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		setScreen(new MenuScreen(this));
 		font = new BitmapFont();
-		
 		cam = new OrthographicCamera();
 		viewport = new StretchViewport(1920, 1080, cam);
 		viewport.apply();
 		
-		
+
+		setScreen(new MenuScreen(this));
 		
 		camX = 960;
 		camY = 540;
 		cam.position.set(camX, camY, 0);
+		player = 2;
 	}
 
 	
@@ -99,6 +103,8 @@ public class MyGdxGame extends Game implements Runnable {
 	@Override
 	public void dispose () {
 		batch.dispose();
+		socketClient.stop();
+		socketServer.stop();
 	}
 
 

@@ -34,6 +34,7 @@ public class character extends Actor {
 	Boolean goneThisTurn;
 	Boolean isNext;
 	Sprite large;
+	public int team;
 	
 	
 	public character(MyGdxGame game)
@@ -147,5 +148,14 @@ public class character extends Actor {
 	public void setSelected(Boolean select)
 	{
 		selected = select;
+	}
+	
+	public int getTeam()
+	{
+		return team;
+	}
+	public void setTeam(int player)
+	{
+		team = player;
 	}
 }

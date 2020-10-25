@@ -30,8 +30,9 @@ public class Archer extends character {
 	Boolean isNext;
 	Texture model = new Texture("ARCHER.png");
 	Sprite large;
+	public int team;
 	
-	public Archer(MyGdxGame game) {
+	public Archer(final MyGdxGame game) {
 		super(game);
 		name = "Archer";
 		sprit = new Sprite(model);
@@ -49,6 +50,7 @@ public class Archer extends character {
 		sType = "Archer" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
+		team = 1;
 		
 		addListener(new InputListener()
 		{
@@ -70,13 +72,17 @@ public class Archer extends character {
 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				if(game.player == team)
+				{
 				if(selected == false)
 				{
 				selected = true;
+				System.out.println("selected");
 				}
 				else
 				{
 					selected = false;
+				}
 				}
 				
 				return super.touchDown(event, x, y, pointer, button);
@@ -201,5 +207,13 @@ public class Archer extends character {
 		public void setSelected(Boolean select)
 		{
 			selected = select;
+		}
+		public int getTeam()
+		{
+			return team;
+		}
+		public void setTeam(int player)
+		{
+			team = player;
 		}
 	}

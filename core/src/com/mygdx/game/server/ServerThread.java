@@ -38,9 +38,8 @@ public class ServerThread extends Thread{
 		try {
 		
 			line = in.readUTF();
-			System.out.println(line);
-			
-				out.writeUTF("A client is communicating.");
+			//System.out.println(line);
+				out.writeUTF(line);
 				out.flush();
 				System.out.println("SERVER > Server has replied");
 				

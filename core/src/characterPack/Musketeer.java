@@ -30,8 +30,9 @@ public class Musketeer extends character {
 	Boolean isNext;
 	Texture model = new Texture("MUSKETEER.png");
 	Sprite large;
+	public int team;
 	
-	public Musketeer(MyGdxGame game) {
+	public Musketeer(final MyGdxGame game) {
 		super(game);
 		name = "Musketeer";
 		sprit = new Sprite(model);
@@ -43,7 +44,7 @@ public class Musketeer extends character {
 		batch = game.batch;
 		Bfont = new BitmapFont();
 		selected = false;
-		fxC = 125;
+		fxC = 135;
 		fyC = 25;
 		setBounds(135, 25, sprit.getWidth(), sprit.getHeight());
 		setTouchable(Touchable.enabled);
@@ -51,6 +52,7 @@ public class Musketeer extends character {
 		sType = "Musketeer" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
+		team = 1;
 		
 		addListener(new InputListener()
 		{
@@ -72,6 +74,9 @@ public class Musketeer extends character {
 
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				
+				if(game.player == team)
+				{
 				if(selected == false)
 				{
 				selected = true;
@@ -80,7 +85,7 @@ public class Musketeer extends character {
 				{
 					selected = false;
 				}
-				
+				}
 				return super.touchDown(event, x, y, pointer, button);
 			}
 
@@ -197,5 +202,13 @@ public class Musketeer extends character {
 		public void setSelected(Boolean select)
 		{
 			selected = select;
+		}
+		public int getTeam()
+		{
+			return team;
+		}
+		public void setTeam(int player)
+		{
+			team = player;
 		}
 	}
