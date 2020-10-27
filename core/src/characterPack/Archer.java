@@ -31,6 +31,7 @@ public class Archer extends character {
 	Texture model = new Texture("ARCHER.png");
 	Sprite large;
 	public int team;
+	public String characterID;
 	
 	public Archer(final MyGdxGame game) {
 		super(game);
@@ -50,7 +51,7 @@ public class Archer extends character {
 		sType = "Archer" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
-		team = 1;
+		characterID = "00";
 		
 		addListener(new InputListener()
 		{
@@ -215,5 +216,9 @@ public class Archer extends character {
 		public void setTeam(int player)
 		{
 			team = player;
+		}
+		public String getID()
+		{
+			return characterID;
 		}
 	}

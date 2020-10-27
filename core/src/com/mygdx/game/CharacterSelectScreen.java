@@ -37,7 +37,7 @@ public class CharacterSelectScreen extends ScreenAdapter{
 	ArrayList<MenuButton> Displays;
 	ArrayList<character> team1;
 	ArrayList<character> team2;
-
+	
 	Texture archButtonSkin;
 	Texture knightButtonSkin;
 	Texture priestButtonSkin;
@@ -95,7 +95,7 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		charSelectStage.addActor(A1);
 		charSelectStage.addActor(K1);
 		charSelectStage.addActor(P1);
-		charSelectStage.addActor(M1);		
+		charSelectStage.addActor(M1);
 	}
 
 	@Override
@@ -130,7 +130,6 @@ public class CharacterSelectScreen extends ScreenAdapter{
 			if(game.team1.size() >= 2 && game.team2.size() >= 2 || game.team1.size() + game.team2.size() == 4)
 			{
 				game.setScreen(new GameScreen(game));
-
 			}
 
 		}
@@ -155,6 +154,7 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					Displays.get(0).setX(150);
 					Displays.get(0).setY(800 - (150 * game.team1.size()));
 					game.team1.add(a);
+					a.setTeam(1);
 					System.out.println("Team 1: " + game.team1.toString());
 					acceptButton.Accept = false;
 					A1.characterSelected = false;
@@ -169,6 +169,7 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					Displays.get(0).setX(1770);
 					Displays.get(0).setY(800 - (150 * game.team2.size()));
 						game.team2.add(a);
+						a.setTeam(2);
 						System.out.println(game.team2.toString());
 						acceptButton.Accept = false;
 						A1.characterSelected = false;
@@ -332,72 +333,81 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					if(game.currentDirection.substring(2).equals("00"))
 					{
 						System.out.println("Player 1 has chosen Archer.");
-						game.team1.add(a);
 						game.newDirection = false;
 						Displays.get(0).setX(150);
 						Displays.get(0).setY(800 - (150 * game.team1.size()));
+						game.team1.add(a);
+						p.setTeam(1);
 					}
 					if(game.currentDirection.substring(2).equals("01"))
 					{
 						System.out.println("Player 1 has chosen Knight.");
-						game.team1.add(k);
 						game.newDirection = false;
 						Displays.get(1).setX(150);
 						Displays.get(1).setY(800 - (150 * game.team1.size()));
+						game.team1.add(k);
+						k.setTeam(1);
 					}
 					if(game.currentDirection.substring(2).equals("02"))
 					{
 						System.out.println("Player 1 has chosen Priest.");
-						game.team1.add(p);
 						game.newDirection = false;
 						Displays.get(2).setX(150);
 						Displays.get(2).setY(800 - (150 * game.team1.size()));
+						game.team1.add(p);
+						p.setTeam(1);
 					}
 					if(game.currentDirection.substring(2).equals("03"))
 					{
 						System.out.println("Player 1 has chosen Musketeer.");
-						game.team1.add(m);
 						game.newDirection = false;
 						Displays.get(3).setX(150);
 						Displays.get(3).setY(800 - (150 * game.team1.size()));
+						game.team1.add(m);
+						m.setTeam(1);
 					}
 					
 				}
-				if(game.currentDirection.substring(2).equals(2)) {
+				if(game.currentDirection.substring(1, 2).equals("2")) {
 					
 						System.out.println("Player 2 is making a selection");
 					
 					if(game.currentDirection.substring(2).equals("00"))
 					{
 						System.out.println("Player 2 has chosen Archer.");
-						game.team2.add(new Archer(game));
 						game.newDirection = false;
 						Displays.get(0).setX(1770);
 						Displays.get(0).setY(800 - (150 * game.team2.size()));
+						game.team2.add(new Archer(game));
+						a.setTeam(2);
 					}
 					if(game.currentDirection.substring(2).equals("01"))
 					{
 						System.out.println("Player 2 has chosen Knight.");
-						game.team2.add(new Knight(game));
 						game.newDirection = false;
 						Displays.get(1).setX(1770);
 						Displays.get(1).setY(800 - (150 * game.team2.size()));
+						game.team2.add(new Knight(game));
+						k.setTeam(2);
+						
 					}
 					if(game.currentDirection.substring(2).equals("02"))
 					{
 						System.out.println("Player 2 has chosen Priest.");
-						game.team2.add(new Priest(game));
 						game.newDirection = false;
 						Displays.get(2).setX(1770);
 						Displays.get(2).setY(800 - (150 * game.team2.size()));
+						game.team2.add(new Priest(game));
+						p.setTeam(2);
 					}
 					if(game.currentDirection.substring(2).equals("03"))
 					{
 						System.out.println("Player 2 has chosen Musketeer.");
-						game.team2.add(new Musketeer(game));
 						game.newDirection = false;
 						Displays.get(3).setX(1770);
 						Displays.get(3).setY(800 - (150 * game.team2.size()));
+						game.team2.add(new Musketeer(game));
+						m.setTeam(2);
 					}
 					
 					
@@ -405,8 +415,9 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					
 				}
 			}
-			game.currentDirection = "";
 		}
+		game.currentDirection = "";
+		game.newDirection = false;
 	}
 
 	@Override

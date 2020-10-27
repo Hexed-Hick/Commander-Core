@@ -31,6 +31,7 @@ public class Musketeer extends character {
 	Texture model = new Texture("MUSKETEER.png");
 	Sprite large;
 	public int team;
+	public String characterID;
 	
 	public Musketeer(final MyGdxGame game) {
 		super(game);
@@ -52,7 +53,7 @@ public class Musketeer extends character {
 		sType = "Musketeer" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
-		team = 1;
+		characterID = "03";
 		
 		addListener(new InputListener()
 		{
@@ -210,5 +211,9 @@ public class Musketeer extends character {
 		public void setTeam(int player)
 		{
 			team = player;
+		}
+		public String getID()
+		{
+			return characterID;
 		}
 	}

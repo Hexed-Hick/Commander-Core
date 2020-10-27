@@ -32,6 +32,7 @@ public class Knight extends character{
 	Sprite large;
 	public int team;
 	MyGdxGame game;
+	public String characterID;
 	
 	public Knight(final MyGdxGame game) {
 		super(game);
@@ -54,7 +55,7 @@ public class Knight extends character{
 		mouseOver = false;
 		isNext = false;
 		this.game = game;
-		team = 1;
+		characterID = "01";
 		
 		addListener(new InputListener()
 		{
@@ -213,5 +214,9 @@ public class Knight extends character{
 		public void setTeam(int player)
 		{
 			team = player;
+		}
+		public String getID()
+		{
+			return characterID;
 		}
 	}

@@ -37,6 +37,7 @@ public class Actor1 extends Actor {
 	int camX;
 	int camY;
 	MyGdxGame game;
+	String moveMessage;
 	
 	public Actor1(final MyGdxGame game, Texture texture, int x, int y, int xchord, int ychord, SpriteBatch b, character currentChar)
 	{
@@ -69,7 +70,7 @@ public class Actor1 extends Actor {
 
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-			//	System.out.println(xC + ", " + yC );
+				System.out.println(xC + ", " + yC );
 				alph = 1;
 				//render.begin();
 				//type.draw(render, stype, Gdx.input.getX(), Gdx.input.getY());
@@ -91,10 +92,10 @@ public class Actor1 extends Actor {
 				System.out.println("Click");
 				if(selected != null)
 				{
-				//if(selected.getSpeed() >= (Math.abs(selected.getXc() - xC)) && selected.getSpeed() >= Math.abs((selected.getYc() - yC)) )
-			//	{
 					if(selected.getNext() == true)
 					{
+						if(selected.getSpeed() >= (Math.abs(selected.getXc() - xC)) && selected.getSpeed() >= Math.abs((selected.getYc() - yC)) && !(selected.getXc() == yC && selected.getYc() == xC))
+						{
 						System.out.println("Moving.");
 					move.setPosition(fxC - camX, fyC - camY);
 					move.setDuration(1f);
@@ -106,14 +107,32 @@ public class Actor1 extends Actor {
 					selected.setTurn(true);
 					selected.setNext(false);
 					selected.setSelected(false);
-					
-					}
+					System.out.println("Local character moved to: X " + fxC + ", Y " + fyC);
+					if(xC < 10 && yC > 9) 
+							{
+					moveMessage = "2" + selected.getID() + "0" + Integer.toString(xC) +  Integer.toString(yC);
+							}
+							else if (xC > 9 && yC < 10)
+							{
+								moveMessage = "2" + selected.getID() + Integer.toString(xC) + "0" + Integer.toString(yC);
+							}
+							else if (xC > 9 && yC > 9)
+							{
+								moveMessage = "2" + selected.getID() + Integer.toString(xC) + Integer.toString(yC);
+							}
+							else if (xC < 10 && yC < 10)
+							{
+								moveMessage = "2" + selected.getID() + "0" + Integer.toString(xC) + "0" + Integer.toString(yC);
+							}
+					game.socketClient.sendData(moveMessage);
+					moveMessage = "";
+							}
+				else
+				{
+					System.out.println("Not close enough.");
 				}
-				//else
-				//{
-				//	System.out.println("Not close enough.");
-				//}
-				//}
+					}
+					}
 				return super.touchDown(event, x, y, pointer, button);
 			}
 

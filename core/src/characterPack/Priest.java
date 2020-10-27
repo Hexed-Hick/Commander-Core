@@ -31,6 +31,7 @@ public class Priest extends character {
 	Texture model = new Texture("PRIEST.png");
 	Sprite large;
 	public int team;
+	public String characterID;
 
 	MyGdxGame game;
 	
@@ -55,7 +56,7 @@ public class Priest extends character {
 		sType = "Priest" + "\nHealth: " + health + "\nSpeed: "+ speed;
 		mouseOver = false;
 		isNext = false;
-		team = 1;
+		characterID = "02";
 		
 		addListener(new InputListener()
 		{
@@ -213,5 +214,9 @@ public class Priest extends character {
 		public void setTeam(int player)
 		{
 			team = player;
+		}
+		public String getID()
+		{
+			return characterID;
 		}
 	}

@@ -35,6 +35,7 @@ public class character extends Actor {
 	Boolean isNext;
 	Sprite large;
 	public int team;
+	public String characterID;
 	
 	
 	public character(MyGdxGame game)
@@ -157,5 +158,8 @@ public class character extends Actor {
 	public void setTeam(int player)
 	{
 		team = player;
+	}
+	public String getID() {
+		return characterID;
 	}
 }
