@@ -1,23 +1,13 @@
 package com.mygdx.game.server;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ConnectException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
-import java.rmi.UnknownHostException;
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Game;
 import com.mygdx.game.MyGdxGame;
 
 

@@ -1,36 +1,23 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import java.util.ArrayList;
+import java.util.Random;
+
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.server.Client;
 import com.mygdx.game.server.Server;
 
 import characterPack.character;
-
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
-import java.util.*;
 
 public class MyGdxGame extends Game implements Runnable {
 	public SpriteBatch batch;
@@ -86,14 +73,14 @@ public class MyGdxGame extends Game implements Runnable {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		cam = new OrthographicCamera();
-		viewport = new StretchViewport(1920, 1080, cam);
+		viewport = new StretchViewport(1366, 768, cam);
 		viewport.apply();
 		
 
 		setScreen(new MenuScreen(this));
 		
-		camX = 960;
-		camY = 540;
+		camX = viewport.getScreenWidth()/2;
+		camY = viewport.getScreenHeight()/2;
 		cam.position.set(camX, camY, 0);
 		player = 2;
 	}

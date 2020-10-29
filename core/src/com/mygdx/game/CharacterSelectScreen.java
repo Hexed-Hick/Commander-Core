@@ -4,18 +4,12 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.MenuButton;
-import com.mygdx.game.MyGdxGame;
 
 import characterPack.Archer;
 import characterPack.Knight;
@@ -71,11 +65,11 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		acceptButtonSkin = new Texture("ACCEPT.png");
 		Displays = new ArrayList<>();
 
-		acceptButton = new MenuButton(acceptButtonSkin,800,500,"accept");
-		A1 = new MenuButton(archButtonSkin,750,800,"archer");
-		K1 = new MenuButton(knightButtonSkin,900,800,"knight");
-		P1 = new MenuButton(priestButtonSkin,1050,800,"priest");
-		M1 = new MenuButton(muskButtonSkin,1200,800,"musketeer");
+		acceptButton = new MenuButton(acceptButtonSkin,game.viewport.getScreenWidth()/2 - 100 , game.viewport.getScreenHeight()/2 - 50,"accept");
+		A1 = new MenuButton(archButtonSkin,game.viewport.getScreenWidth()/2 - 360,game.viewport.getScreenHeight()/2 + 100,"archer");
+		K1 = new MenuButton(knightButtonSkin,game.viewport.getScreenWidth()/2 - 210,game.viewport.getScreenHeight()/2 + 100,"knight");
+		P1 = new MenuButton(priestButtonSkin,game.viewport.getScreenWidth()/2 - 60,game.viewport.getScreenHeight()/2 + 100,"priest");
+		M1 = new MenuButton(muskButtonSkin,game.viewport.getScreenWidth()/2 + 90,game.viewport.getScreenHeight()/2 + 100,"musketeer");
 		
 		Displays.add(A1);
 		Displays.add(K1);
@@ -135,8 +129,7 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		}
 		if(A1.characterSelected)
 		{
-			Displays.get(0).setX(750);
-			Displays.get(0).setY(700);
+			Displays.get(0).setY(Displays.get(0).getY() - 75);
 			
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -151,8 +144,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 			{
 				if(game.player == 1)
 				{
-					Displays.get(0).setX(150);
-					Displays.get(0).setY(800 - (150 * game.team1.size()));
+					Displays.get(0).setX(game.viewport.getScreenWidth()/10);
+					Displays.get(0).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 					game.team1.add(a);
 					a.setTeam(1);
 					System.out.println("Team 1: " + game.team1.toString());
@@ -166,8 +159,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 				}
 				else
 				{
-					Displays.get(0).setX(1770);
-					Displays.get(0).setY(800 - (150 * game.team2.size()));
+					Displays.get(0).setX(game.viewport.getScreenWidth()/10 * 9);
+					Displays.get(0).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 						game.team2.add(a);
 						a.setTeam(2);
 						System.out.println(game.team2.toString());
@@ -183,8 +176,7 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		}
 		if(K1.characterSelected)
 		{
-			Displays.get(1).setX(900);
-			Displays.get(1).setY(700);
+			Displays.get(1).setY(Displays.get(1).getY() - 75);
 
 			game.batch.begin();
 			game.batch.draw(Displays.get(1).getSkin(), Displays.get(1).getXC(), Displays.get(1).getYC());
@@ -197,8 +189,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 			{
 				if(game.player == 1)
 				{
-					Displays.get(1).setX(150);
-					Displays.get(1).setY(800 - (150 * game.team1.size()));
+					Displays.get(1).setX(game.viewport.getScreenWidth()/10);
+					Displays.get(1).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 					k.setTeam(1);
 				game.team1.add(k);
 				System.out.println(game.team1.toString());
@@ -212,8 +204,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 				}
 				else
 				{
-					Displays.get(1).setX(1770);
-					Displays.get(1).setY(800 - (150 * game.team2.size()));
+					Displays.get(1).setX(game.viewport.getScreenWidth()/10 * 9);
+					Displays.get(1).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 					k.setTeam(2);
 						game.team2.add(k);
 						System.out.println(game.team2.toString());
@@ -229,9 +221,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		}
 		if(P1.characterSelected)
 		{
-			Displays.get(2).setX(1050);
-			Displays.get(2).setY(700);
-
+			Displays.get(2).setY(Displays.get(2).getY() - 75);
+			
 			game.batch.begin();
 			game.batch.draw(Displays.get(2).getSkin(), Displays.get(2).getXC(), Displays.get(2).getYC());
 			game.batch.draw(acceptButton.getSkin(), acceptButton.getXC(), acceptButton.getYC());
@@ -243,8 +234,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 			{
 				if(game.player == 1)
 				{	
-				Displays.get(2).setX(150);
-				Displays.get(2).setY(800 - (150 * game.team1.size()));
+					Displays.get(2).setX(game.viewport.getScreenWidth()/10);
+					Displays.get(2).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 				p.setTeam(1);
 				game.team1.add(p);
 					System.out.println(game.team1.toString());
@@ -258,8 +249,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 				}
 				else
 				{
-					Displays.get(2).setX(1770);
-					Displays.get(2).setY(800 - (150 * game.team2.size()));
+					Displays.get(2).setX(game.viewport.getScreenWidth()/10 * 9);
+					Displays.get(2).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 					p.setTeam(2);
 						game.team2.add(p);
 						System.out.println(game.team2.toString());
@@ -276,8 +267,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 		}
 		if(M1.characterSelected)
 		{
-			Displays.get(3).setX(1200);
-			Displays.get(3).setY(700);
+			Displays.get(3).setY(Displays.get(3).getY() - 75);
+			
 			game.batch.begin();
 			game.batch.draw(Displays.get(3).getSkin(), Displays.get(3).getXC(), Displays.get(3).getYC());
 			game.batch.draw(acceptButton.getSkin(), acceptButton.getXC(), acceptButton.getYC());
@@ -289,8 +280,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 			{
 				if(game.player == 1)
 				{
-					Displays.get(3).setX(150);
-					Displays.get(3).setY(800 - (150 * game.team1.size()));
+					Displays.get(3).setX(game.viewport.getScreenWidth()/10);
+					Displays.get(3).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 					m.setTeam(1);
 					game.team1.add(m);
 					System.out.println(game.team1.toString());
@@ -304,8 +295,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 				}
 				else
 				{
-					Displays.get(3).setX(1770);
-					Displays.get(3).setY(800 - (150 * game.team2.size()));
+					Displays.get(3).setX(game.viewport.getScreenWidth()/10 * 9);
+					Displays.get(3).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 					m.setTeam(2);
 						game.team2.add(m);
 						System.out.println(game.team2.toString());
@@ -334,8 +325,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 1 has chosen Archer.");
 						game.newDirection = false;
-						Displays.get(0).setX(150);
-						Displays.get(0).setY(800 - (150 * game.team1.size()));
+						Displays.get(0).setX(game.viewport.getScreenWidth()/10);
+						Displays.get(0).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 						game.team1.add(a);
 						p.setTeam(1);
 					}
@@ -343,8 +334,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 1 has chosen Knight.");
 						game.newDirection = false;
-						Displays.get(1).setX(150);
-						Displays.get(1).setY(800 - (150 * game.team1.size()));
+						Displays.get(1).setX(game.viewport.getScreenWidth()/10);
+						Displays.get(1).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 						game.team1.add(k);
 						k.setTeam(1);
 					}
@@ -352,8 +343,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 1 has chosen Priest.");
 						game.newDirection = false;
-						Displays.get(2).setX(150);
-						Displays.get(2).setY(800 - (150 * game.team1.size()));
+						Displays.get(2).setX(game.viewport.getScreenWidth()/10);
+						Displays.get(2).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 						game.team1.add(p);
 						p.setTeam(1);
 					}
@@ -361,8 +352,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 1 has chosen Musketeer.");
 						game.newDirection = false;
-						Displays.get(3).setX(150);
-						Displays.get(3).setY(800 - (150 * game.team1.size()));
+						Displays.get(3).setX(game.viewport.getScreenWidth()/10);
+						Displays.get(3).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team1.size()));
 						game.team1.add(m);
 						m.setTeam(1);
 					}
@@ -376,8 +367,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 2 has chosen Archer.");
 						game.newDirection = false;
-						Displays.get(0).setX(1770);
-						Displays.get(0).setY(800 - (150 * game.team2.size()));
+						Displays.get(0).setX(game.viewport.getScreenWidth()/10 * 9);
+						Displays.get(0).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 						game.team2.add(new Archer(game));
 						a.setTeam(2);
 					}
@@ -385,8 +376,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 2 has chosen Knight.");
 						game.newDirection = false;
-						Displays.get(1).setX(1770);
-						Displays.get(1).setY(800 - (150 * game.team2.size()));
+						Displays.get(1).setX(game.viewport.getScreenWidth()/10 * 9);
+						Displays.get(1).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 						game.team2.add(new Knight(game));
 						k.setTeam(2);
 						
@@ -395,8 +386,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 2 has chosen Priest.");
 						game.newDirection = false;
-						Displays.get(2).setX(1770);
-						Displays.get(2).setY(800 - (150 * game.team2.size()));
+						Displays.get(2).setX(game.viewport.getScreenWidth()/10 * 9);
+						Displays.get(2).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 						game.team2.add(new Priest(game));
 						p.setTeam(2);
 					}
@@ -404,8 +395,8 @@ public class CharacterSelectScreen extends ScreenAdapter{
 					{
 						System.out.println("Player 2 has chosen Musketeer.");
 						game.newDirection = false;
-						Displays.get(3).setX(1770);
-						Displays.get(3).setY(800 - (150 * game.team2.size()));
+						Displays.get(3).setX(game.viewport.getScreenWidth()/10 * 9);
+						Displays.get(3).setY(game.viewport.getScreenHeight()/4 * 3 - (150 * game.team2.size()));
 						game.team2.add(new Musketeer(game));
 						m.setTeam(2);
 					}

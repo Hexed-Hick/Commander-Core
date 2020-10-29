@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 public class MenuButton extends Actor {
 	
 	Sprite skin;
-	int xChord;
+	float xChord;
 	int yChord;
 	String buttonType;
 	Boolean startGame;
@@ -29,7 +29,7 @@ public class MenuButton extends Actor {
 	Boolean Chosen;
 	
 
-	public MenuButton(Texture texture, int x, int y, String type)
+	public MenuButton(Texture texture, float x, int y, String type)
 	{
 		skin = new Sprite(texture);
 		xChord = x;
@@ -135,7 +135,7 @@ public class MenuButton extends Actor {
 					}
 				});
 	}
-	public int getXC()
+	public float getXC()
 	{
 		return xChord;
 	}

@@ -26,5 +26,10 @@
 			<type>2</type>
 			<location>C:/Users/Roman/Documents/GitHub/Commander/LIBGDX GAME/core/assets</location>
 		</link>
+		<link>
+			<name>default</name>
+			<type>2</type>
+			<location>C:/Users/Roman/Documents/GitHub/Commander/LIBGDX GAME/core/bin/default</location>
+		</link>
 	</linkedResources>
 </projectDescription>

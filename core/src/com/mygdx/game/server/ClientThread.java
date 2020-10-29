@@ -1,13 +1,10 @@
 package com.mygdx.game.server;
-import java.io.*;
-import java.net.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 import com.mygdx.game.MyGdxGame;
-
-import characterPack.Archer;
-import characterPack.Knight;
-import characterPack.Musketeer;
-import characterPack.Priest;
 
 public class ClientThread extends Thread {
 		protected Socket socket;

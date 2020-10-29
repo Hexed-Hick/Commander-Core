@@ -4,22 +4,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygdx.game.server.Client;
-import com.mygdx.game.server.Server;
 
 import characterPack.Archer;
 import characterPack.Knight;
@@ -83,7 +78,7 @@ public GameScreen(MyGdxGame newGame)
 		archer = new Texture("ARCHER.png");
 		outline = new Texture("HIGHLIGHT.png");
 		knight = new Texture("KNIGHT.png");
-		tiles = new ArrayList<ArrayList<Actor1>>();
+		game.tiles = new ArrayList<ArrayList<Actor1>>();
 		blank = new ArrayList<Actor1>();
 		blankCharacterArray = new ArrayList<character>();
 		moveTo = new MoveToAction();
@@ -118,8 +113,8 @@ public GameScreen(MyGdxGame newGame)
 		//game.cam = new OrthographicCamera();
 		//viewport = new StretchViewport(1920, 1080, cam);
 		//viewport.apply();
-		camX = 960;
-		camY = 540;
+		camX = game.viewport.getScreenWidth()/2;
+		camY = game.viewport.getScreenHeight()/2;
 		//cam.position.set(camX, camY, 0);
 		//NESTED LOOPS CREATING RED HIGHLIGHT GRID AND ARRAYLIST FOR HIGHLIGHT ACTORS.
 		for(int i = 0; i < 20; i++)
@@ -129,15 +124,15 @@ public GameScreen(MyGdxGame newGame)
 				if(i%2 == 0)
 				{
 					highlight = new Actor1(game, outline, x + (i*45), y + (51 * j), i, j, game.batch, game.selectedPlayer );
-					tiles.add(blank);
-					tiles.get(i).add(highlight);
+					game.tiles.add(blank);
+					game.tiles.get(i).add(highlight);
 					stage.addActor(highlight);
 				}
 				else
 				{
 					highlight = new Actor1(game, outline, x + (i*45), (y + 25) + (51*j), i, j, game.batch, game.selectedPlayer );
-					tiles.add(blank);
-					tiles.get(i).add(highlight);
+					game.tiles.add(blank);
+					game.tiles.get(i).add(highlight);
 					stage.addActor(highlight);
 				}
 			}
@@ -255,14 +250,14 @@ public GameScreen(MyGdxGame newGame)
 			{
 				//Designates selected character.
 				game.selectedPlayer = game.playerList.get(i);
-				for(int x = 0; x < tiles.size(); x++)
+				for(int x = 0; x < game.tiles.size(); x++)
 				{
-					for(int w = 0; w < tiles.get(x).size(); w++)
+					for(int w = 0; w < game.tiles.get(x).size(); w++)
 					{
 						
-						tiles.get(x).get(w).setSelected(game.selectedPlayer);
-						tiles.get(x).get(w).setCamX(x1);
-						tiles.get(x).get(w).setCamY(y1);
+						game.tiles.get(x).get(w).setSelected(game.selectedPlayer);
+						game.tiles.get(x).get(w).setCamX(x1);
+						game.tiles.get(x).get(w).setCamY(y1);
 					}
 				}
 				
@@ -273,12 +268,12 @@ public GameScreen(MyGdxGame newGame)
 		    //y = y + 4;
 			y1 = y1 - 4;
 			//game.socketClient.sendData("Player is moving down.");
-			for(int i = 0; i < tiles.size(); i++)
+			for(int i = 0; i < game.tiles.size(); i++)
 			{
-				for(int j = 0; j < tiles.get(i).size(); j++)
+				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
 					
-					tiles.get(i).get(j).moveBy(0, .010f);
+					game.tiles.get(i).get(j).moveBy(0, .010f);
 				}
 			}
 			
@@ -298,11 +293,11 @@ public GameScreen(MyGdxGame newGame)
 			//y = y - 4;
 			y1 = y1 + 4;
 			//game.socketClient.sendData("Player is moving up.");
-			for(int i = 0; i < tiles.size(); i++)
+			for(int i = 0; i < game.tiles.size(); i++)
 			{
-				for(int j = 0; j < tiles.get(i).size(); j++)
+				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					tiles.get(i).get(j).moveBy(0, -.010f);
+					game.tiles.get(i).get(j).moveBy(0, -.010f);
 				}
 			}
 			
@@ -320,11 +315,11 @@ public GameScreen(MyGdxGame newGame)
 			//x = x + 4;
 			x1 = x1 - 4;
 			//game.socketClient.sendData("Player is moving left.");
-			for(int i = 0; i < tiles.size(); i++)
+			for(int i = 0; i < game.tiles.size(); i++)
 			{
-				for(int j = 0; j < tiles.get(i).size(); j++)
+				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					tiles.get(i).get(j).moveBy(.01f, 0);
+					game.tiles.get(i).get(j).moveBy(.01f, 0);
 				}
 			}
 			for(int i = 0; i < game.playerList.size(); i++)
@@ -342,11 +337,11 @@ public GameScreen(MyGdxGame newGame)
 			//x = x - 4;
 			x1 = x1 + 4;
 		//	game.socketClient.sendData("Player is moving right.");
-			for(int i = 0; i < tiles.size(); i++)
+			for(int i = 0; i < game.tiles.size(); i++)
 			{
-				for(int j = 0; j < tiles.get(i).size(); j++)
+				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					tiles.get(i).get(j).moveBy(-.01f, 0);
+					game.tiles.get(i).get(j).moveBy(-.01f, 0);
 				}
 			}
 			
@@ -432,7 +427,7 @@ public GameScreen(MyGdxGame newGame)
 		game.batch.setProjectionMatrix(game.cam.combined);
 		game.batch.begin();
 		
-		//NESTED LOOPS FOR DRAWING MAP TILES.
+		//NESTED LOOPS FOR DRAWING MAP game.tiles.
 		for(int i = 0; i < 20; i++)
 		{
 			// Each row is started with i value
@@ -451,14 +446,14 @@ public GameScreen(MyGdxGame newGame)
 		}
 		//NESTED LOOP FOR CHECKING IF MOUSE OVER TILE. IF TRUE, HIGHLIGHT TILE.
 		
-		for(int i = 0; i < tiles.size(); i++)
+		for(int i = 0; i < game.tiles.size(); i++)
 		{
-			for(int j = 0; j < tiles.get(i).size(); j++)
+			for(int j = 0; j < game.tiles.get(i).size(); j++)
 			{
-				if(tiles.get(i).get(j).getAlpha() == 1)
+				if(game.tiles.get(i).get(j).getAlpha() == 1)
 				{
-					game.batch.draw(tiles.get(i).get(j).getSkin(), x + tiles.get(i).get(j).getfX(), y + tiles.get(i).get(j).getfY());
-					font.draw(game.batch, tiles.get(i).get(j).getType(), x1 + Gdx.input.getX(), y1 + (Gdx.input.getY() + ((game.viewport.getWorldHeight()/2) - Gdx.input.getY())*2));
+					game.batch.draw(game.tiles.get(i).get(j).getSkin(), x + game.tiles.get(i).get(j).getfX(), y + game.tiles.get(i).get(j).getfY());
+					font.draw(game.batch, game.tiles.get(i).get(j).getType(), x1 + Gdx.input.getX(), y1 + (Gdx.input.getY() + ((game.viewport.getWorldHeight()/2) - Gdx.input.getY())*2));
 				}
 			}
 		}
@@ -495,26 +490,26 @@ public GameScreen(MyGdxGame newGame)
 				{
 					if(game.playerList.get(i).getID().equals(currentCharacterID))
 					{
-						for(int x = 0; x < tiles.size(); x++)
+						for(int x = 0; x < game.tiles.size(); x++)
 						{
-							for(int z = 0; z < tiles.get(x).size(); z++)
+							for(int z = 0; z < game.tiles.get(x).size(); z++)
 							{
-								System.out.println("Current Tile X: " + tiles.get(x).get(z).getX());
-								System.out.println("Current Tile Y: " + tiles.get(x).get(z).getY());
+								System.out.println("Current Tile X: " + game.tiles.get(x).get(z).getX());
+								System.out.println("Current Tile Y: " + game.tiles.get(x).get(z).getY());
 								System.out.println("Acting X: " + currentX);
 								System.out.println("Acting Y: " + currentY);
-								if((tiles.get(x).get(z).getX() == currentX) && (tiles.get(x).get(z).getY() == currentY))
+								if((game.tiles.get(x).get(z).getX() == currentX) && (game.tiles.get(x).get(z).getY() == currentY))
 								{
 									System.out.println("Moving character " + currentCharacterID + " to X: " + currentX + " Y: " + currentY);
-									move.setPosition(tiles.get(x).get(z).fxC - tiles.get(x).get(z).camX, tiles.get(x).get(z).fyC - tiles.get(x).get(z).camY);
+									move.setPosition(game.tiles.get(x).get(z).fxC - game.tiles.get(x).get(z).camX, game.tiles.get(x).get(z).fyC - game.tiles.get(x).get(z).camY);
 									move.setDuration(1f);
-									game.playerList.get(i).setfxC(tiles.get(x).get(z).getfX());
-									game.playerList.get(i).setfyC(tiles.get(x).get(z).getfY());
+									game.playerList.get(i).setfxC(game.tiles.get(x).get(z).getfX());
+									game.playerList.get(i).setfyC(game.tiles.get(x).get(z).getfY());
 									game.playerList.get(i).setxC(currentX);
 									game.playerList.get(i).setyC(currentY);
 									System.out.println("New character coords: " + game.playerList.get(i).getXc() + " , " +  game.playerList.get(i).getYc());
 									System.out.println("New Character Screen Location: X " + game.playerList.get(i).getX() + " , Y " + game.playerList.get(i).getY());
-									System.out.println("Supposed to be: X " + tiles.get(x).get(z).getfX() + " , Y " +  tiles.get(x).get(z).getfY());
+									System.out.println("Supposed to be: X " + game.tiles.get(x).get(z).getfX() + " , Y " +  game.tiles.get(x).get(z).getfY());
 									game.playerList.get(i).addAction(move);
 									game.playerList.get(i).setTurn(true);
 									game.playerList.get(i).setNext(false);
@@ -528,15 +523,15 @@ public GameScreen(MyGdxGame newGame)
 							}
 						}
 					/*	System.out.println("Moving character " + currentCharacterID + " to X: " + currentX + " Y: " + currentY);
-						move.setPosition(tiles.get(currentX).get(currentY).fxC - tiles.get(currentX).get(currentY).camX, tiles.get(currentX).get(currentY).fyC - tiles.get(currentX).get(currentY).camY);
+						move.setPosition(game.tiles.get(currentX).get(currentY).fxC - game.tiles.get(currentX).get(currentY).camX, game.tiles.get(currentX).get(currentY).fyC - game.tiles.get(currentX).get(currentY).camY);
 						move.setDuration(1f);
-						game.playerList.get(i).setfxC(tiles.get(currentX).get(currentY).getfX());
-						game.playerList.get(i).setfyC(tiles.get(currentX).get(currentY).getfY());
+						game.playerList.get(i).setfxC(game.tiles.get(currentX).get(currentY).getfX());
+						game.playerList.get(i).setfyC(game.tiles.get(currentX).get(currentY).getfY());
 						game.playerList.get(i).setxC(currentX);
 						game.playerList.get(i).setyC(currentY);
 						System.out.println("New character coords: " + game.playerList.get(i).getXc() + " , " +  game.playerList.get(i).getYc());
 						System.out.println("New Character Screen Location: X " + game.playerList.get(i).getX() + " , Y " + game.playerList.get(i).getY());
-						System.out.println("Supposed to be: X " + tiles.get(currentX).get(currentY).getfX() + " , Y " +  tiles.get(currentX).get(currentY).getfY());
+						System.out.println("Supposed to be: X " + game.tiles.get(currentX).get(currentY).getfX() + " , Y " +  game.tiles.get(currentX).get(currentY).getfY());
 						game.playerList.get(i).addAction(move);
 						game.playerList.get(i).setTurn(true);
 						game.playerList.get(i).setNext(false);

@@ -2,15 +2,11 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class CharacterScreen extends ScreenAdapter{
@@ -44,9 +40,9 @@ public class CharacterScreen extends ScreenAdapter{
 		startButtonSkin = new Texture("START.png");
 
 
-		startButton = new MenuButton(startButtonSkin, 860, 700, "start");
-		charButton = new MenuButton(charButtonSkin,860,800,"characters");
-		exitButton = new MenuButton(exitButtonSkin,860,600,"exit");
+		startButton = new MenuButton(startButtonSkin, game.viewport.getScreenWidth()/2 - 100, 400, "start");
+		charButton = new MenuButton(charButtonSkin,game.viewport.getScreenWidth()/2 - 100,500,"characters");
+		exitButton = new MenuButton(exitButtonSkin,game.viewport.getScreenWidth()/2 - 100,300,"exit");
 
 		charStage.addActor(startButton);
 		charStage.addActor(charButton);
