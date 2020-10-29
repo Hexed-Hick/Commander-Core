@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.gameThreads.Interpreter;
 
 import characterPack.Archer;
 import characterPack.Knight;
@@ -475,8 +476,12 @@ public GameScreen(MyGdxGame newGame)
 		}
 		
 		//ONLINE INPUT INTERPRETATION.
-		
 		if(game.newDirection)
+		{
+			game.interpreter = new Interpreter(game);
+			game.interpreter.run();
+		}
+	/*	if(game.newDirection)
 		{
 			System.out.println("Game screen acting on new direction.");
 			System.out.println(game.currentDirection.substring(0, 1));
@@ -522,31 +527,13 @@ public GameScreen(MyGdxGame newGame)
 								}
 							}
 						}
-					/*	System.out.println("Moving character " + currentCharacterID + " to X: " + currentX + " Y: " + currentY);
-						move.setPosition(game.tiles.get(currentX).get(currentY).fxC - game.tiles.get(currentX).get(currentY).camX, game.tiles.get(currentX).get(currentY).fyC - game.tiles.get(currentX).get(currentY).camY);
-						move.setDuration(1f);
-						game.playerList.get(i).setfxC(game.tiles.get(currentX).get(currentY).getfX());
-						game.playerList.get(i).setfyC(game.tiles.get(currentX).get(currentY).getfY());
-						game.playerList.get(i).setxC(currentX);
-						game.playerList.get(i).setyC(currentY);
-						System.out.println("New character coords: " + game.playerList.get(i).getXc() + " , " +  game.playerList.get(i).getYc());
-						System.out.println("New Character Screen Location: X " + game.playerList.get(i).getX() + " , Y " + game.playerList.get(i).getY());
-						System.out.println("Supposed to be: X " + game.tiles.get(currentX).get(currentY).getfX() + " , Y " +  game.tiles.get(currentX).get(currentY).getfY());
-						game.playerList.get(i).addAction(move);
-						game.playerList.get(i).setTurn(true);
-						game.playerList.get(i).setNext(false);
-						game.playerList.get(i).setSelected(false);
-						currentX = 0;
-						currentY = 0;
-						currentCharacterID = "";
-						game.newDirection = false;
-						game.currentDirection = "";*/
+				
 					}
 				}
 				
 			}
 		}
-		
+		*/
 		
 		game.batch.end();
 		stage.draw();

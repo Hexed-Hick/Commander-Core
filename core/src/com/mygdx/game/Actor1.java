@@ -19,8 +19,8 @@ public class Actor1 extends Actor {
 	SpriteBatch render;
 	int xC;
 	int yC;
-	float fxC;
-	float fyC;
+	public float fxC;
+	public float fyC;
 	boolean clicked;
 	String stype;
 	BitmapFont type;
@@ -28,8 +28,8 @@ public class Actor1 extends Actor {
 	int movement;
 	character selected;
 	MoveToAction move = new MoveToAction();
-	int camX;
-	int camY;
+	public int camX;
+	public int camY;
 	MyGdxGame game;
 	String moveMessage;
 	

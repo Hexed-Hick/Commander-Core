@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.gameThreads.Interpreter;
 import com.mygdx.game.server.Client;
 import com.mygdx.game.server.Server;
 
@@ -38,7 +39,7 @@ public class MyGdxGame extends Game implements Runnable {
 	int camX;
 	int camY;
 	Random rng = new Random();
-	ArrayList<ArrayList <Actor1>> tiles;
+	public ArrayList<ArrayList <Actor1>> tiles;
 	ArrayList<Actor1> blank;
 	ArrayList<character> blankCharacterArray;
 	character temp;
@@ -60,8 +61,13 @@ public class MyGdxGame extends Game implements Runnable {
 	public ArrayList<character> team2;
 	public String currentDirection;
 	public boolean newDirection;
-	
+	public String currentCharacterID1;
+	String currentChaacterID2;
+	public int currentX;
+	public int currentY;
 	public int player;
+	
+	public Interpreter interpreter;
 	
 	 Client socketClient;
 	 Server socketServer;
