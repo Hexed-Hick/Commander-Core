@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.mygdx.game.Actor1;
 import com.mygdx.game.MyGdxGame;
 
 public class Knight extends character{
@@ -33,6 +34,7 @@ public class Knight extends character{
 	public int team;
 	MyGdxGame game;
 	public String characterID;
+	Actor1 currentTile;
 	
 	public Knight(final MyGdxGame game) {
 		super(game);
@@ -218,5 +220,13 @@ public class Knight extends character{
 		public String getID()
 		{
 			return characterID;
+		}
+		public Actor1 getCurrentTile()
+		{
+			return currentTile;
+		}
+		public void setCurrentTile(Actor1 tile) {
+			currentTile = tile;
+			//System.out.println("CHARACTER " + this.getType() + " IS NOW ASSOCIATED WITH TILE " + tile.getXCoord() + ", " + tile.getYCoord());
 		}
 	}

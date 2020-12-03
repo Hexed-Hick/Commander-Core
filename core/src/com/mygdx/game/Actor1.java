@@ -17,8 +17,8 @@ public class Actor1 extends Actor {
 	float alph;
 	Sprite sprit;
 	SpriteBatch render;
-	int xC;
-	int yC;
+	public int txC;
+	public int tyC;
 	public float fxC;
 	public float fyC;
 	boolean clicked;
@@ -32,14 +32,16 @@ public class Actor1 extends Actor {
 	public int camY;
 	MyGdxGame game;
 	String moveMessage;
+	int SUPPOSEDX;
+	Boolean mouseOver;
 	
 	public Actor1(final MyGdxGame game, Texture texture, int x, int y, int xchord, int ychord, SpriteBatch b, character currentChar)
 	{
 		sprit = new Sprite(texture);
 		setBounds(x, y, sprit.getWidth(), sprit.getHeight());
 		setTouchable(Touchable.enabled);
-		xC = xchord;
-		yC = ychord;
+		txC = xchord;
+		tyC = ychord;
 		fxC = x;
 		fyC = y;
 		alph = 0;
@@ -50,6 +52,7 @@ public class Actor1 extends Actor {
 		camX = 0;
 		camY = 0;
 		this.game = game;
+		mouseOver = false;
 		
 		//if(sprit.equals(new Sprite(new Texture("GRASS TILE1.png"))))
 		//{
@@ -64,8 +67,9 @@ public class Actor1 extends Actor {
 
 			@Override
 			public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				System.out.println(xC + ", " + yC );
+				System.out.println(txC + ", " + tyC );
 				alph = 1;
+				mouseOver = true;
 				//render.begin();
 				//type.draw(render, stype, Gdx.input.getX(), Gdx.input.getY());
 				//render.end();
@@ -77,6 +81,7 @@ public class Actor1 extends Actor {
 				System.out.println("Off");
 				if(clicked == false) {
 				alph = 0;
+				mouseOver = false;
 				}
 				super.exit(event, x, y, pointer, toActor);
 			}
@@ -84,39 +89,46 @@ public class Actor1 extends Actor {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println("Click");
+				for(int i = 0 ; i <  game.getAdjacentTiles(game.tiles.get(txC).get(tyC)).size(); i++ )
+				{
+					System.out.println("This tile is " +  txC + ", "+ tyC);
+					System.out.println("Its adjacent tiles are: ");
+					System.out.println(game.getAdjacentTiles(game.tiles.get(txC).get(tyC)).get(i).getXCoord() + ", " + game.getAdjacentTiles(game.tiles.get(txC).get(tyC)).get(i).getYCoord());
+				}
 				if(selected != null)
 				{
 					if(selected.getNext() == true)
 					{
-						if(selected.getSpeed() >= (Math.abs(selected.getXc() - xC)) && selected.getSpeed() >= Math.abs((selected.getYc() - yC)) && !(selected.getXc() == yC && selected.getYc() == xC))
+						if(selected.getSpeed() >= (Math.abs(selected.getXc() - txC)) && selected.getSpeed() >= Math.abs((selected.getYc() - tyC)) && !(selected.getXc() == tyC && selected.getYc() == txC))
 						{
 						System.out.println("Moving.");
 					move.setPosition(fxC - camX, fyC - camY);
 					move.setDuration(1f);
 					selected.setfxC(fxC);
 					selected.setfyC(fyC);
-					selected.setxC(xC);
-					selected.setyC(yC);
+					selected.setxC(txC);
+					selected.setyC(tyC);
 					selected.addAction(move);
 					selected.setTurn(true);
 					selected.setNext(false);
 					selected.setSelected(false);
+					selected.setCurrentTile(game.tiles.get(txC).get(tyC));
 					System.out.println("Local character moved to: X " + fxC + ", Y " + fyC);
-					if(xC < 10 && yC > 9) 
+					if(txC < 10 && tyC > 9) 
 							{
-					moveMessage = "2" + selected.getID() + "0" + Integer.toString(xC) +  Integer.toString(yC);
+					moveMessage = "2" + selected.getID() + "0" + Integer.toString(txC) +  Integer.toString(tyC);
 							}
-							else if (xC > 9 && yC < 10)
+							else if (txC > 9 && tyC < 10)
 							{
-								moveMessage = "2" + selected.getID() + Integer.toString(xC) + "0" + Integer.toString(yC);
+								moveMessage = "2" + selected.getID() + Integer.toString(txC) + "0" + Integer.toString(tyC);
 							}
-							else if (xC > 9 && yC > 9)
+							else if (txC > 9 && tyC > 9)
 							{
-								moveMessage = "2" + selected.getID() + Integer.toString(xC) + Integer.toString(yC);
+								moveMessage = "2" + selected.getID() + Integer.toString(txC) + Integer.toString(tyC);
 							}
-							else if (xC < 10 && yC < 10)
+							else if (txC < 10 && tyC < 10)
 							{
-								moveMessage = "2" + selected.getID() + "0" + Integer.toString(xC) + "0" + Integer.toString(yC);
+								moveMessage = "2" + selected.getID() + "0" + Integer.toString(txC) + "0" + Integer.toString(tyC);
 							}
 					game.socketClient.sendData(moveMessage);
 					moveMessage = "";
@@ -158,14 +170,14 @@ public class Actor1 extends Actor {
 		return sprit;
 	}
 	
-	public float getX()
+	public int getXCoord()
 	{
-		return xC;
+		return txC;
 	}
 	
-	public float getY()
+	public int getYCoord()
 	{
-		return yC;
+		return tyC;
 	}
 	
 	public float getfY()
@@ -219,6 +231,10 @@ public class Actor1 extends Actor {
 		return camY;
 	}
 	
+	public void setAlpha(int value)
+	{
+		alph = value;
+	}
 }
 	
 

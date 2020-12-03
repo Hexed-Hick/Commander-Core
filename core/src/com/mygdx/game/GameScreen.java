@@ -66,6 +66,7 @@ String currentCharacterID;
 int currentX;
 int currentY;
 MoveToAction move;
+Boolean tick;
 
 public GameScreen(MyGdxGame newGame)
 {
@@ -120,21 +121,25 @@ public GameScreen(MyGdxGame newGame)
 		//NESTED LOOPS CREATING RED HIGHLIGHT GRID AND ARRAYLIST FOR HIGHLIGHT ACTORS.
 		for(int i = 0; i < 20; i++)
 		{
+			System.out.println("Starting a new row.");
+			game.tiles.add(blank);
 			for(int j = 0; j < 20; j++)
 			{
 				if(i%2 == 0)
 				{
-					highlight = new Actor1(game, outline, x + (i*45), y + (51 * j), i, j, game.batch, game.selectedPlayer );
-					game.tiles.add(blank);
+					System.out.println("Generating location X: " + i + " Y: " + j);
+					highlight = new Actor1(game, outline, (i*45), (51 * j), i, j, game.batch, game.selectedPlayer );
 					game.tiles.get(i).add(highlight);
 					stage.addActor(highlight);
+					System.out.println("The coordinates within this tile are: X: " + highlight.getXCoord() + " Y: " + highlight.getYCoord());
 				}
 				else
 				{
-					highlight = new Actor1(game, outline, x + (i*45), (y + 25) + (51*j), i, j, game.batch, game.selectedPlayer );
-					game.tiles.add(blank);
+					System.out.println("Generating location X: " + i + " Y: " + j);
+					highlight = new Actor1(game, outline, (i*45), (25) + (51*j), i, j, game.batch, game.selectedPlayer );
 					game.tiles.get(i).add(highlight);
 					stage.addActor(highlight);
+					System.out.println("The coordinates within this tile are: X: " + highlight.getXCoord() + " Y: " + highlight.getYCoord());
 				}
 			}
 		}
@@ -193,6 +198,7 @@ public GameScreen(MyGdxGame newGame)
 			game.team1.get(i).setyC(0);
 			game.team1.get(i).setfxC(i * 45);
 			game.team1.get(i).setfyC(0);
+			game.team1.get(i).setCurrentTile(game.tiles.get(i).get(0));
 			}
 			else
 			{
@@ -201,6 +207,7 @@ public GameScreen(MyGdxGame newGame)
 				game.team1.get(i).setyC(0);
 				game.team1.get(i).setfxC(i * 45);
 				game.team1.get(i).setfyC(25);
+				game.team1.get(i).setCurrentTile(game.tiles.get(i).get(0));
 			}
 		}
 		for(int i = 0; i < game.team2.size(); i++)
@@ -209,10 +216,11 @@ public GameScreen(MyGdxGame newGame)
 			if(i%2 == 0)
 			{//x + (i*45), y + (51 * j)
 			game.team2.get(i).setBounds((19 - i) *45, (19*51) + 25, game.team2.get(i).getSkin().getWidth(), game.team2.get(i).getSkin().getHeight());
-			game.team2.get(i).setxC(20 - i);
-			game.team2.get(i).setyC(20);
+			game.team2.get(i).setxC(19 - i);
+			game.team2.get(i).setyC(19);
 			game.team2.get(i).setfxC((19 - i) *45);
 			game.team2.get(i).setfyC((19 * 51) + 25);
+			game.team2.get(i).setCurrentTile(game.tiles.get(19 - i).get(19));
 			}
 			else
 			{
@@ -221,9 +229,17 @@ public GameScreen(MyGdxGame newGame)
 				game.team2.get(i).setyC(19);
 				game.team2.get(i).setfxC((19 - i) * 45);
 				game.team2.get(i).setfyC((19 * 51));
+				game.team2.get(i).setCurrentTile(game.tiles.get(19 - i).get(19));
 			}
 		}
 		
+		//Sets the current Tile location of each character to their spawn points upon game initialization.
+		for(int i = 0; i < game.playerList.size(); i++) {
+			System.out.println("Player's X coordinate: " + game.playerList.get(i).getXc() + " Player's Y coordinate: " + game.playerList.get(i).getYc());
+			game.playerList.get(i).setCurrentTile(game.tiles.get(game.playerList.get(i).getXc()).get(game.playerList.get(i).getYc()));
+		}
+		
+		tick = false;
 	}
 
 	@Override
@@ -257,6 +273,15 @@ public GameScreen(MyGdxGame newGame)
 					{
 						
 						game.tiles.get(x).get(w).setSelected(game.selectedPlayer);
+						
+						//VERY IMPORTANT. THIS PROVIDES EACH TILE WITH ITS OWN CAM OFFSET
+						//TO TRANSLATE TO PLAYER MOVEMENT. THIS IS NECESSARY AND 
+						//SHOULD PROBABLY BE MOVED TO ITS OWN LOOP LATER ON!!!
+						
+						
+						
+						
+						
 						game.tiles.get(x).get(w).setCamX(x1);
 						game.tiles.get(x).get(w).setCamY(y1);
 					}
@@ -266,7 +291,7 @@ public GameScreen(MyGdxGame newGame)
 		}
 		//IF STATEMENTS FOR CAMERA MOVEMENT USING ARROW KEYS.
 		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-		    //y = y + 4;
+		   // y = y + 4;
 			y1 = y1 - 4;
 			//game.socketClient.sendData("Player is moving down.");
 			for(int i = 0; i < game.tiles.size(); i++)
@@ -274,7 +299,7 @@ public GameScreen(MyGdxGame newGame)
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
 					
-					game.tiles.get(i).get(j).moveBy(0, .010f);
+					game.tiles.get(i).get(j).moveBy(0, .2f);
 				}
 			}
 			
@@ -298,7 +323,7 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					game.tiles.get(i).get(j).moveBy(0, -.010f);
+					game.tiles.get(i).get(j).moveBy(0, -.2f);
 				}
 			}
 			
@@ -320,7 +345,7 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					game.tiles.get(i).get(j).moveBy(.01f, 0);
+					game.tiles.get(i).get(j).moveBy(.2f, 0);
 				}
 			}
 			for(int i = 0; i < game.playerList.size(); i++)
@@ -342,7 +367,7 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					game.tiles.get(i).get(j).moveBy(-.01f, 0);
+					game.tiles.get(i).get(j).moveBy(-.2f, 0);
 				}
 			}
 			
@@ -437,11 +462,11 @@ public GameScreen(MyGdxGame newGame)
 				//each column is filled with j loop
 				if(i%2 == 0)
 				{
-					game.batch.draw(GT1,  x + (i*45), y + (51 * j));
+					game.batch.draw(GT1,  (i*45), (51 * j));
 				}
 				else
 				{
-					game.batch.draw(FMGT,x + (i*45), (y + 25) + (51*j));
+					game.batch.draw(FMGT,(i*45), (25) + (51*j));
 				}
 			}
 		}
@@ -458,13 +483,32 @@ public GameScreen(MyGdxGame newGame)
 				}
 			}
 		}
+		
+		
+		
+		
+		
+		
+		//Do all of the things that you should do regarding the current selected player.
 		if(game.selectedPlayer != null)
 		{
 		if(game.selectedPlayer.getDisplayImage() != null)
 		{
 		game.batch.draw(game.selectedPlayer.getDisplayImage(), x1, y1 );
 		}
+	//	System.out.println("Character's tile coordinates: " + game.selectedPlayer.getXc() + ", " + game.selectedPlayer.getYc());
+	//	System.out.println("Retrieving tile at i = 18, j = 19" + game.tiles.get(18).get(19).txC + ", " + game.tiles.get(18).get(19).tyC);
+		game.currentTile = game.tiles.get(game.selectedPlayer.getXc()).get(game.selectedPlayer.getYc());
+	//	System.out.println("The game's current tile coords are :" + game.currentTile.getXCoord() + ", " + game.currentTile.getYCoord());
 		}
+		else
+		{
+			game.currentTile = null;
+			game.resetTiles();
+		}
+		
+		
+		
 		//LOOP DRAWING PLAYERS
 		for(int i = 0; i < game.playerList.size(); i++)
 		{
@@ -474,6 +518,7 @@ public GameScreen(MyGdxGame newGame)
 				font.draw(game.batch, game.playerList.get(i).getType(), x1 + Gdx.input.getX() - 85, y1 + (Gdx.input.getY() + ((game.viewport.getWorldHeight()/2) - Gdx.input.getY())*2));
 			}
 		}
+	
 		
 		//ONLINE INPUT INTERPRETATION.
 		if(game.newDirection)
@@ -481,59 +526,19 @@ public GameScreen(MyGdxGame newGame)
 			game.interpreter = new Interpreter(game);
 			game.interpreter.run();
 		}
-	/*	if(game.newDirection)
-		{
-			System.out.println("Game screen acting on new direction.");
-			System.out.println(game.currentDirection.substring(0, 1));
-			if(game.currentDirection.substring(0, 1).equals("2"))
-			{
-				currentCharacterID = game.currentDirection.substring(1, 3);
-				currentX = Integer.valueOf(game.currentDirection.substring(3, 5));
-				currentY = Integer.valueOf(game.currentDirection.substring(5));
-				
-				for(int i = 0; i < game.playerList.size(); i++)
-				{
-					if(game.playerList.get(i).getID().equals(currentCharacterID))
-					{
-						for(int x = 0; x < game.tiles.size(); x++)
-						{
-							for(int z = 0; z < game.tiles.get(x).size(); z++)
-							{
-								System.out.println("Current Tile X: " + game.tiles.get(x).get(z).getX());
-								System.out.println("Current Tile Y: " + game.tiles.get(x).get(z).getY());
-								System.out.println("Acting X: " + currentX);
-								System.out.println("Acting Y: " + currentY);
-								if((game.tiles.get(x).get(z).getX() == currentX) && (game.tiles.get(x).get(z).getY() == currentY))
-								{
-									System.out.println("Moving character " + currentCharacterID + " to X: " + currentX + " Y: " + currentY);
-									move.setPosition(game.tiles.get(x).get(z).fxC - game.tiles.get(x).get(z).camX, game.tiles.get(x).get(z).fyC - game.tiles.get(x).get(z).camY);
-									move.setDuration(1f);
-									game.playerList.get(i).setfxC(game.tiles.get(x).get(z).getfX());
-									game.playerList.get(i).setfyC(game.tiles.get(x).get(z).getfY());
-									game.playerList.get(i).setxC(currentX);
-									game.playerList.get(i).setyC(currentY);
-									System.out.println("New character coords: " + game.playerList.get(i).getXc() + " , " +  game.playerList.get(i).getYc());
-									System.out.println("New Character Screen Location: X " + game.playerList.get(i).getX() + " , Y " + game.playerList.get(i).getY());
-									System.out.println("Supposed to be: X " + game.tiles.get(x).get(z).getfX() + " , Y " +  game.tiles.get(x).get(z).getfY());
-									game.playerList.get(i).addAction(move);
-									game.playerList.get(i).setTurn(true);
-									game.playerList.get(i).setNext(false);
-									game.playerList.get(i).setSelected(false);
-									currentCharacterID = "";
-									game.newDirection = false;
-									game.currentDirection = "";
-									System.out.println("Directions complete.");
-									break;
-								}
-							}
-						}
-				
-					}
-				}
-				
-			}
+	
+		//Re-Checks the current tile for each character.
+		//for(int i = 0; i < game.playerList.size(); i++) {
+		//	game.playerList.get(i).setCurrentTile(game.tiles.get(game.playerList.get(i).getXc()).get(game.playerList.get(i).getYc()));
+			//if(game.playerList.get(i).getCurrentTile().getXCoord() == 0) {
+				//game.playerList.get(i).getCurrentTile().setXCoord(game.playerList.get(i).getXc());
+			//}
+	//	}
+		
+		game.updateTempTiles(null, 0);
+		if(game.selectedPlayer != null) {
+			//System.out.println("Character's current tile:  " + game.selectedPlayer.getCurrentTile().getXCoord() + ", " + game.selectedPlayer.getCurrentTile().getYCoord());
 		}
-		*/
 		
 		game.batch.end();
 		stage.draw();
@@ -560,4 +565,7 @@ public GameScreen(MyGdxGame newGame)
 		GT1.dispose();
 		FMGT.dispose();
 	}
+	
+	
+
 }

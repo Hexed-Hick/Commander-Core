@@ -34,11 +34,11 @@ public class Interpreter implements Runnable {
 					{
 						for(int z = 0; z < game.tiles.get(x).size(); z++)
 						{
-							System.out.println("Current Tile X: " + game.tiles.get(x).get(z).getX());
-							System.out.println("Current Tile Y: " + game.tiles.get(x).get(z).getY());
-							System.out.println("Acting X: " + game.currentX);
-							System.out.println("Acting Y: " + game.currentY);
-							if((game.tiles.get(x).get(z).getX() == game.currentX) && (game.tiles.get(x).get(z).getY() == game.currentY))
+							//System.out.println("Current Tile X: " + game.tiles.get(x).get(z).getXCoord());
+							//System.out.println("Current Tile Y: " + game.tiles.get(x).get(z).getYCoord());
+							//System.out.println("Acting X: " + game.currentX);
+							//System.out.println("Acting Y: " + game.currentY);
+							if((game.tiles.get(x).get(z).getXCoord() == game.currentX) && (game.tiles.get(x).get(z).getYCoord() == game.currentY))
 							{
 								System.out.println("Moving character " + game.currentCharacterID1 + " to X: " + game.currentX + " Y: " + game.currentY);
 								move.setPosition(game.tiles.get(x).get(z).fxC - game.tiles.get(x).get(z).camX, game.tiles.get(x).get(z).fyC - game.tiles.get(x).get(z).camY);

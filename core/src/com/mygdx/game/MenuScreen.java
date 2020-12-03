@@ -21,7 +21,7 @@ public class MenuScreen extends ScreenAdapter {
 
 	SpriteBatch batch;
 	Sprite sprite;
-	
+	//Each menuButton object is created. These are actor objects with click input listeners. Each one should set a new screen of some sort.
 	MenuButton startButton;
 	MenuButton hostButton;
 	MenuButton exitButton;
@@ -30,6 +30,7 @@ public class MenuScreen extends ScreenAdapter {
 	MenuButton connectButton;
 	MenuButton resolutionButton;
 	
+	// Each of the texture sprites for the buttons.
 	Texture startButtonSkin;
 	Texture hostButtonSkin;
 	Texture connectButtonSkin;
@@ -38,12 +39,14 @@ public class MenuScreen extends ScreenAdapter {
 	Texture resolutionButtonSkin;
 	Texture exitButtonSkin;
 
+	// The textfield that takes IP and Port as input and textField string is the default text message in the ip field?
 	TextField input;
 	String textField;
 	
 	MyGdxGame game;
 	Stage menuStage;
 	boolean startGame;
+	//if hosting, player = 1, team = 1, initiate server and client
 	boolean isHosting;
 	boolean isConnecting;
 	TextField userInputIP;
@@ -59,9 +62,10 @@ public class MenuScreen extends ScreenAdapter {
 	
 	@Override
 	public void show() {
-		
+		//show() is exactly like the create() method for children of the thread class. This initializes all variables, so that it does not have to take place in the Run() method.
 		batch = new SpriteBatch();
 		menuStage = new Stage(game.viewport, batch);
+		// Creating texture sprites out of file names from the assets. Root file address not necessary.
 		startButtonSkin = new Texture("START.png");
 		hostButtonSkin = new Texture("HOST.png");					//start server to be connected too
 		exitButtonSkin = new Texture("EXIT.png");
@@ -70,37 +74,47 @@ public class MenuScreen extends ScreenAdapter {
 		connectButtonSkin = new Texture("CONNECT.png");				//allow for connection to another server
 		resolutionButtonSkin = new Texture("RESOLUTION.png");
 		
+		// Creating each menu button, which is composed of a sprite, x coordinate, y coordinate, and a String designating what type of button it is. Some serious chad brain code here.
 		startButton = new MenuButton(startButtonSkin, game.viewport.getScreenWidth()/2 - 100 , 600 , "start");
 		hostButton = new MenuButton(hostButtonSkin,game.viewport.getScreenWidth()/2  - 100, 500, "host");
 		connectButton = new MenuButton(connectButtonSkin, game.viewport.getScreenWidth()/2  - 100, 400, "connect");
 		settingsButton = new MenuButton(settingsButtonSkin, game.viewport.getScreenWidth()/2  - 100, 300, "settings");
 		exitButton = new MenuButton(exitButtonSkin, game.viewport.getScreenWidth()/2  - 100, 200,"exit");
 
+		// Adding each button to the stage, so that it can be drawn and also accept user input. (i.e. clicking).
 		menuStage.addActor(startButton);
 		menuStage.addActor(hostButton);
 		menuStage.addActor(connectButton);
 		menuStage.addActor(settingsButton);
 		menuStage.addActor(exitButton);
 	    
-
+		
 		startGame = false;
 	}
 
 	@Override
 	public void render(float delta) {
+		// The following draws a black backdrop behind the game world. This keeps the pixels from clipping onto the background and creating infinite headache visuals.
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//Must begin a batch before it can draw to the screen. 
 		game.batch.begin();
+		//Drawing each menu button actor by calling their "skin" (texture or sprite) and its FLOAT x/y coordinates.
 		game.batch.draw(startButton.getSkin(), startButton.getX() , startButton.getYC());
 		game.batch.draw(hostButton.getSkin(), hostButton.getX(), hostButton.getYC());
 		game.batch.draw(connectButton.getSkin(), connectButton.getX(), connectButton.getYC());
 		game.batch.draw(settingsButton.getSkin(), settingsButton.getX(), settingsButton.getYC());
 		game.batch.draw(exitButton.getSkin(), exitButton.getX() , exitButton.getYC());
+		//Must end the batch for other elements to access the screen.
 		game.batch.end();
+		//ACT allows the menustage to draw and accept input from actors.
 		menuStage.act();
 		menuStage.draw();
 		
+		//The following line assigns the user input to the menuStage. No other stages (ui, or otherwise) could be utilized here. For the game, to split input between UI and gameworld, we must use a multiplexer.
+		// 																																										TO DO LATER ^^^^^^^^^^^^^^^^^^^^
 		Gdx.input.setInputProcessor(menuStage);
 		
+		//If the user presses startButton, then startGame will be set to true, and it will set the game screen to the character screen. All of the buttons here follow suit. I
 		if(startButton.startGame())
 		{
 			game.setScreen(new CharacterScreen(game));
