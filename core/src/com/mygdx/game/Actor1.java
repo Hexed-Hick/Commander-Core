@@ -33,7 +33,8 @@ public class Actor1 extends Actor {
 	MyGdxGame game;
 	String moveMessage;
 	int SUPPOSEDX;
-	Boolean mouseOver;
+	public Boolean mouseOver;
+	public Boolean acceptable;
 	
 	public Actor1(final MyGdxGame game, Texture texture, int x, int y, int xchord, int ychord, SpriteBatch b, character currentChar)
 	{
@@ -53,6 +54,7 @@ public class Actor1 extends Actor {
 		camY = 0;
 		this.game = game;
 		mouseOver = false;
+		acceptable = false;
 		
 		//if(sprit.equals(new Sprite(new Texture("GRASS TILE1.png"))))
 		//{
@@ -89,17 +91,18 @@ public class Actor1 extends Actor {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				System.out.println("Click");
-				for(int i = 0 ; i <  game.getAdjacentTiles(game.tiles.get(txC).get(tyC)).size(); i++ )
+				for(int i = 0 ; i <  game.updater.getAdjacentTiles(game.tiles.get(txC).get(tyC)).size(); i++ )
 				{
 					System.out.println("This tile is " +  txC + ", "+ tyC);
 					System.out.println("Its adjacent tiles are: ");
-					System.out.println(game.getAdjacentTiles(game.tiles.get(txC).get(tyC)).get(i).getXCoord() + ", " + game.getAdjacentTiles(game.tiles.get(txC).get(tyC)).get(i).getYCoord());
+					System.out.println(game.updater.getAdjacentTiles(game.tiles.get(txC).get(tyC)).get(i).getXCoord() + ", " + game.updater.getAdjacentTiles(game.tiles.get(txC).get(tyC)).get(i).getYCoord());
 				}
 				if(selected != null)
 				{
 					if(selected.getNext() == true)
 					{
-						if(selected.getSpeed() >= (Math.abs(selected.getXc() - txC)) && selected.getSpeed() >= Math.abs((selected.getYc() - tyC)) && !(selected.getXc() == tyC && selected.getYc() == txC))
+						//if(selected.getSpeed() >= (Math.abs(selected.getXc() - txC)) && selected.getSpeed() >= Math.abs((selected.getYc() - tyC)) && !(selected.getXc() == tyC && selected.getYc() == txC))
+						if(acceptable)
 						{
 						System.out.println("Moving.");
 					move.setPosition(fxC - camX, fyC - camY);
@@ -235,6 +238,15 @@ public class Actor1 extends Actor {
 	{
 		alph = value;
 	}
+	
+	public void setXCoord(int coord) {
+		txC = coord;
+	}
+	public void setYCoord(int coord) {
+		tyC = coord;
+	}
+	
+	
 }
 	
 

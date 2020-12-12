@@ -16,7 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.gameThreads.Interpreter;
+import com.mygdx.game.gameThreads.TileUpdater;
 
+import characterAbilities.Ability;
 import characterPack.Archer;
 import characterPack.Knight;
 import characterPack.Musketeer;
@@ -67,6 +69,8 @@ int currentX;
 int currentY;
 MoveToAction move;
 Boolean tick;
+Boolean set;
+Boolean newPlayer;
 
 public GameScreen(MyGdxGame newGame)
 {
@@ -95,6 +99,7 @@ public GameScreen(MyGdxGame newGame)
 		game.playerList.add(priestPlayer);
 		game.playerList.add(gunPlayer);*/
 		game.turnList = new ArrayList<ArrayList<character>>();
+		game.acceptableTiles = new ArrayList<Actor1>();
 		nextFound = false;
 		turnOver = false;
 		mapHeight = 20;
@@ -111,7 +116,7 @@ public GameScreen(MyGdxGame newGame)
 			game.playerList.add(game.team2.get(i));
 		}
 		
-		
+		set = false;
 		//game.cam = new OrthographicCamera();
 		//viewport = new StretchViewport(1920, 1080, cam);
 		//viewport.apply();
@@ -122,6 +127,7 @@ public GameScreen(MyGdxGame newGame)
 		for(int i = 0; i < 20; i++)
 		{
 			System.out.println("Starting a new row.");
+			blank = new ArrayList<Actor1>();
 			game.tiles.add(blank);
 			for(int j = 0; j < 20; j++)
 			{
@@ -240,6 +246,8 @@ public GameScreen(MyGdxGame newGame)
 		}
 		
 		tick = false;
+		game.updater = new TileUpdater(game);
+		game.abilities = new ArrayList<Ability>();
 	}
 
 	@Override
@@ -248,7 +256,23 @@ public GameScreen(MyGdxGame newGame)
 		stage.act();  
 		Gdx.input.setInputProcessor(stage);
 		game.cam.update();
+		
+		
+	
+		if(!set) {
+			for(int i = 0; i < game.tiles.size(); i++) {
+				for(int j = 0; j < game.tiles.get(i).size(); j++) {
+					game.tiles.get(i).get(j).setXCoord(i);
+					game.tiles.get(i).get(j).setYCoord(j);
+				}
+			}
+			set = true;
+		}
+		
+		
 		//game.socketClient.receiveData();
+		
+
 		
 		//Updating tile actors with current information. 
 		for(int i = 0; i < game.playerList.size(); i++)
@@ -257,9 +281,13 @@ public GameScreen(MyGdxGame newGame)
 			//Unselects player that has just moved or has been unselected.
 			if(game.selectedPlayer != null)
 			{
+				game.updater.setMode(1);
+				game.updater.run();
 			if(game.selectedPlayer.getSelected() == false)
 			{
 				game.selectedPlayer = null;
+				game.updater.setMode(2);
+				game.updater.run();
 			}
 			}
 			//Checks for selected character.
@@ -289,6 +317,8 @@ public GameScreen(MyGdxGame newGame)
 				
 			}
 		}
+		
+
 		//IF STATEMENTS FOR CAMERA MOVEMENT USING ARROW KEYS.
 		if(Gdx.input.isKeyPressed(Keys.DOWN)) {
 		   // y = y + 4;
@@ -299,7 +329,7 @@ public GameScreen(MyGdxGame newGame)
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
 					
-					game.tiles.get(i).get(j).moveBy(0, .2f);
+					game.tiles.get(i).get(j).moveBy(0, 4f);
 				}
 			}
 			
@@ -323,7 +353,7 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					game.tiles.get(i).get(j).moveBy(0, -.2f);
+					game.tiles.get(i).get(j).moveBy(0, -4f);
 				}
 			}
 			
@@ -345,7 +375,7 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					game.tiles.get(i).get(j).moveBy(.2f, 0);
+					game.tiles.get(i).get(j).moveBy(4f, 0);
 				}
 			}
 			for(int i = 0; i < game.playerList.size(); i++)
@@ -367,7 +397,7 @@ public GameScreen(MyGdxGame newGame)
 			{
 				for(int j = 0; j < game.tiles.get(i).size(); j++)
 				{
-					game.tiles.get(i).get(j).moveBy(-.2f, 0);
+					game.tiles.get(i).get(j).moveBy(-4f, 0);
 				}
 			}
 			
@@ -453,6 +483,7 @@ public GameScreen(MyGdxGame newGame)
 		game.batch.setProjectionMatrix(game.cam.combined);
 		game.batch.begin();
 		
+		
 		//NESTED LOOPS FOR DRAWING MAP game.tiles.
 		for(int i = 0; i < 20; i++)
 		{
@@ -490,22 +521,25 @@ public GameScreen(MyGdxGame newGame)
 		
 		
 		//Do all of the things that you should do regarding the current selected player.
-		if(game.selectedPlayer != null)
-		{
-		if(game.selectedPlayer.getDisplayImage() != null)
-		{
-		game.batch.draw(game.selectedPlayer.getDisplayImage(), x1, y1 );
-		}
-	//	System.out.println("Character's tile coordinates: " + game.selectedPlayer.getXc() + ", " + game.selectedPlayer.getYc());
-	//	System.out.println("Retrieving tile at i = 18, j = 19" + game.tiles.get(18).get(19).txC + ", " + game.tiles.get(18).get(19).tyC);
-		game.currentTile = game.tiles.get(game.selectedPlayer.getXc()).get(game.selectedPlayer.getYc());
-	//	System.out.println("The game's current tile coords are :" + game.currentTile.getXCoord() + ", " + game.currentTile.getYCoord());
-		}
-		else
-		{
+			if(game.selectedPlayer != null)
+			{
+			if(game.selectedPlayer.getDisplayImage() != null)
+				{
+					game.batch.draw(game.selectedPlayer.getDisplayImage(), x1, y1 );
+				}
+			
+			if(game.selectedPlayer.getAbility1() != null)
+			{
+				System.out.println("Display character ability 1!");
+				game.batch.draw(game.selectedPlayer.getAbility1().getSprite(), x1 + game.selectedPlayer.getAbility1().x, y1 + game.selectedPlayer.getAbility1().y );
+			}
+			
+			game.currentTile = game.tiles.get(game.selectedPlayer.getXc()).get(game.selectedPlayer.getYc());
+			}
+			else
+			{
 			game.currentTile = null;
-			game.resetTiles();
-		}
+			}
 		
 		
 		
@@ -528,16 +562,11 @@ public GameScreen(MyGdxGame newGame)
 		}
 	
 		//Re-Checks the current tile for each character.
-		//for(int i = 0; i < game.playerList.size(); i++) {
-		//	game.playerList.get(i).setCurrentTile(game.tiles.get(game.playerList.get(i).getXc()).get(game.playerList.get(i).getYc()));
-			//if(game.playerList.get(i).getCurrentTile().getXCoord() == 0) {
-				//game.playerList.get(i).getCurrentTile().setXCoord(game.playerList.get(i).getXc());
-			//}
-	//	}
-		
-		game.updateTempTiles(null, 0);
-		if(game.selectedPlayer != null) {
-			//System.out.println("Character's current tile:  " + game.selectedPlayer.getCurrentTile().getXCoord() + ", " + game.selectedPlayer.getCurrentTile().getYCoord());
+		for(int i = 0; i < game.playerList.size(); i++) {
+			game.playerList.get(i).setCurrentTile(game.tiles.get(game.playerList.get(i).getXc()).get(game.playerList.get(i).getYc()));
+			if(game.playerList.get(i).getCurrentTile().getXCoord() == 0) {
+				game.playerList.get(i).getCurrentTile().setXCoord(game.playerList.get(i).getXc());
+			}
 		}
 		
 		game.batch.end();

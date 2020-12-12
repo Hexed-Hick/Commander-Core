@@ -15,9 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.gameThreads.Interpreter;
+import com.mygdx.game.gameThreads.TileUpdater;
 import com.mygdx.game.server.Client;
 import com.mygdx.game.server.Server;
 
+import characterAbilities.Ability;
 import characterPack.character;
 
 public class MyGdxGame extends Game implements Runnable {
@@ -28,7 +30,7 @@ public class MyGdxGame extends Game implements Runnable {
 	Texture archer;
 	Texture outline;
 	Texture knight;
-	Stage stage;
+	public Stage stage;
 	Actor1 highlight;
 	int Ay = -530;
 	int Ax = -960;
@@ -65,7 +67,7 @@ public class MyGdxGame extends Game implements Runnable {
 	
 	//The selectedPlayer object is whichever character you have most recently clicked on. When a character is registered as selected, you can now move them by clicking a tile, and having them selected
 	//Should highlight the tiles around them that are in range.
-	character selectedPlayer;
+	public character selectedPlayer;
 	//This will be used later to split input between game space and UI.
 	InputMultiplexer multi;
 	//This is a constantly changing turnList that checks the character's speed every render frame or after each turn has ended, and reorganizes the characters by current speed. It cycles backwards.
@@ -102,9 +104,12 @@ public class MyGdxGame extends Game implements Runnable {
 	 Server socketServer;
 	 boolean isHosting;
 	 boolean isConnecting;
+	 ArrayList<Actor1> acceptableTiles;
 	 
 	 //List of tiles that should currently be highlighted, aside from the currently selected tile. (Showing moveable or attackable tiles).
 	 ArrayList<Actor1> tempTiles = new ArrayList<Actor1>();
+	 public ArrayList<Ability> abilities;
+	 public TileUpdater updater;
 	
 	@Override
 	public void create () {
@@ -141,10 +146,11 @@ public class MyGdxGame extends Game implements Runnable {
 		// TODO Auto-generated method stub
 		
 	}
-	public ArrayList<Actor1> getAdjacentTiles(Actor1 tile)
+/*	public ArrayList<Actor1> getAdjacentTiles(Actor1 tile)
 	{
 		ArrayList<Actor1> tiles = new ArrayList<Actor1>();
 		Boolean even = false;
+		System.out.println("RUNNING getAdjacentTiles.exe.    Tile X: " + tile.getXCoord() + " Tile Y: " + tile.getYCoord());
 		if(tile.getXCoord()%2 == 0) {
 			even = true;
 		}
@@ -210,25 +216,29 @@ public class MyGdxGame extends Game implements Runnable {
 				{
 				//	System.out.println("Update TempTiles step 1.");
 					tile = this.tiles.get(this.selectedPlayer.getXc()).get(this.selectedPlayer.getYc());
+					System.out.println("Running updateTempTiles.exe.     Tile X: " + tile.getXCoord() + " Tile Y: " + tile.getYCoord());
+					distance++;
 					ArrayList<Actor1> tiles = getAdjacentTiles(tile);
 					for(int i = 0; i < tiles.size(); i++)
 					{
-						this.updateTempTiles(tiles.get(i), distance + 1);
+						this.updateTempTiles(tiles.get(i), distance);
 					}
 				}
 				else
 				{
 					//System.out.println("UpdateTempTiles step " + distance + ".");
 					tile.setAlpha(1);
+					tile.acceptable = true;
 					this.tiles.get(tile.getXCoord()).get(tile.getYCoord()).setAlpha(1);
 					ArrayList<Actor1> tiles = getAdjacentTiles(tile);
-					if(distance < this.selectedPlayer.getSpeed())
-					{
+					distance++;
+					//if(distance < this.selectedPlayer.getSpeed())
+					//{
 					for(int i = 0; i < tiles.size(); i++)
 					{
-						this.updateTempTiles(tiles.get(i), distance + 1);
+						this.updateTempTiles(tiles.get(i), distance);
 					}
-					}
+					//}
 				}
 				
 			}
@@ -246,6 +256,6 @@ public class MyGdxGame extends Game implements Runnable {
 				this.tiles.get(i).get(j).setAlpha(0);
 			}
 		}
-	}
+	}*/
 
 }

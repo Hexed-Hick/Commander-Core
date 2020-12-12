@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.mygdx.game.Actor1;
 import com.mygdx.game.MyGdxGame;
 
+import characterAbilities.Ability;
+
 public class Priest extends character {
 	String name;
 	int speed;
@@ -36,6 +38,10 @@ public class Priest extends character {
 	Actor1 currentTile;
 
 	MyGdxGame game;
+	
+	Ability ability1;
+	Ability ability2;
+	Ability ability3;
 	
 	public Priest(final MyGdxGame game) {
 		super(game);
@@ -85,6 +91,16 @@ public class Priest extends character {
 				if(selected == false)
 				{
 				selected = true;
+				ability1.setTouchable(Touchable.enabled);
+				ability2.setTouchable(Touchable.enabled);
+				ability2.setTouchable(Touchable.enabled);
+				if(game.selectedPlayer != null) {
+					game.selectedPlayer.selected = false;
+					game.selectedPlayer.ability1.setTouchable(Touchable.disabled);
+					game.selectedPlayer.ability2.setTouchable(Touchable.disabled);
+					game.selectedPlayer.ability3.setTouchable(Touchable.disabled);
+				}
+				System.out.println("selected");
 				}
 				else
 				{
@@ -228,5 +244,18 @@ public class Priest extends character {
 		public void setCurrentTile(Actor1 tile) {
 			currentTile = tile;
 		//	System.out.println("CHARACTER " + this.getType() + " IS NOW ASSOCIATED WITH TILE " + tile.getXCoord() + ", " + tile.getYCoord());
+		}
+		
+		public Ability getAbility1()
+		{
+			return ability1;
+		}
+		
+		public Ability getAbility2() {
+			return ability2;
+		}
+		
+		public Ability getAbility3() {
+			return ability3;
 		}
 	}

@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.mygdx.game.Actor1;
 import com.mygdx.game.MyGdxGame;
 
+import characterAbilities.Ability;
+
 public class Knight extends character{
 	String name;
 	int speed;
@@ -35,6 +37,10 @@ public class Knight extends character{
 	MyGdxGame game;
 	public String characterID;
 	Actor1 currentTile;
+	
+	Ability ability1;
+	Ability ability2;
+	Ability ability3;
 	
 	public Knight(final MyGdxGame game) {
 		super(game);
@@ -81,10 +87,19 @@ public class Knight extends character{
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if(game.player == team)
 				{
-					System.out.println("Selected.");
 				if(selected == false)
 				{
 				selected = true;
+				ability1.setTouchable(Touchable.enabled);
+				ability2.setTouchable(Touchable.enabled);
+				ability2.setTouchable(Touchable.enabled);
+				if(game.selectedPlayer != null) {
+					game.selectedPlayer.selected = false;
+					game.selectedPlayer.ability1.setTouchable(Touchable.disabled);
+					game.selectedPlayer.ability2.setTouchable(Touchable.disabled);
+					game.selectedPlayer.ability3.setTouchable(Touchable.disabled);
+				}
+				System.out.println("selected");
 				}
 				else
 				{
@@ -228,5 +243,18 @@ public class Knight extends character{
 		public void setCurrentTile(Actor1 tile) {
 			currentTile = tile;
 			//System.out.println("CHARACTER " + this.getType() + " IS NOW ASSOCIATED WITH TILE " + tile.getXCoord() + ", " + tile.getYCoord());
+		}
+		
+		public Ability getAbility1()
+		{
+			return ability1;
+		}
+		
+		public Ability getAbility2() {
+			return ability2;
+		}
+		
+		public Ability getAbility3() {
+			return ability3;
 		}
 	}

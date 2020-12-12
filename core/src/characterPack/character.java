@@ -8,6 +8,8 @@ import com.mygdx.game.Actor1;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.SpawnPoint;
 
+import characterAbilities.Ability;
+
 public class character extends Actor {
 	
 	
@@ -55,6 +57,10 @@ public class character extends Actor {
 	public String characterID;
 	
 	public Actor1 currentTile;
+	
+	public Ability ability1;
+	public Ability ability2;
+	public Ability ability3;
 	
 	public character(MyGdxGame game)
 	{
@@ -187,5 +193,17 @@ public class character extends Actor {
 	public void setCurrentTile(Actor1 tile) {
 		currentTile = tile;
 		System.out.println("CHARACTER " + this.getType() + " IS NOW ASSOCIATED WITH TILE " + tile.getXCoord() + ", " + tile.getYCoord());
+	}
+	public Ability getAbility1()
+	{
+		return ability1;
+	}
+	
+	public Ability getAbility2() {
+		return ability2;
+	}
+	
+	public Ability getAbility3() {
+		return ability3;
 	}
 }

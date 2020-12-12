@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.mygdx.game.Actor1;
 import com.mygdx.game.MyGdxGame;
 
+import characterAbilities.Ability;
+import characterAbilities.ArcherAbility1;
+
 public class Archer extends character {
 	String name;
 	int speed;
@@ -34,6 +37,9 @@ public class Archer extends character {
 	public int team;
 	public String characterID;
 	Actor1 currentTile;
+	public Ability ability1;
+	public Ability ability2;
+	public Ability ability3;
 	
 	public Archer(final MyGdxGame game) {
 		super(game);
@@ -54,6 +60,8 @@ public class Archer extends character {
 		mouseOver = false;
 		isNext = false;
 		characterID = "00";
+		ability1 = new ArcherAbility1(game);
+		game.stage.addActor(ability1);
 		
 		addListener(new InputListener()
 		{
@@ -80,6 +88,15 @@ public class Archer extends character {
 				if(selected == false)
 				{
 				selected = true;
+				ability1.setTouchable(Touchable.enabled);
+				ability2.setTouchable(Touchable.enabled);
+				ability2.setTouchable(Touchable.enabled);
+				if(game.selectedPlayer != null) {
+					game.selectedPlayer.selected = false;
+					game.selectedPlayer.ability1.setTouchable(Touchable.disabled);
+					game.selectedPlayer.ability2.setTouchable(Touchable.disabled);
+					game.selectedPlayer.ability3.setTouchable(Touchable.disabled);
+				}
 				System.out.println("selected");
 				}
 				else
@@ -230,5 +247,17 @@ public class Archer extends character {
 		public void setCurrentTile(Actor1 tile) {
 			currentTile = tile;
 			//System.out.println("CHARACTER " + this.getType() + " IS NOW ASSOCIATED WITH TILE " + tile.getXCoord() + ", " + tile.getYCoord());
+		}
+		public Ability getAbility1()
+		{
+			return ability1;
+		}
+		
+		public Ability getAbility2() {
+			return ability2;
+		}
+		
+		public Ability getAbility3() {
+			return ability3;
 		}
 	}
